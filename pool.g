@@ -1,11 +1,21 @@
 lang="C++"
 classname="PoolParser"
+
 inclass
 {
 
 }
 
-test:QString -> "this is a test" {ret = "success";};
+{
+#include "module.h"
+}
 
-WhiteSpace:QString -> ("a"/"b"/"c")*;
-EOL:QString -> "\n" / "\r\n" / "\r";
+S:int -> (WS)*;
+RS:int -> WS (WS)*;
+WS:int -> " "/"\t"/"\v"/"\f"/EOL;
+EOL:int -> "\n" / "\r\n" / "\r";
+
+hashBang:int -> "#!" !(EOL) EOL;
+
+module:Module -> (hashBang)? ;
+

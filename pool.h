@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,85 +22,10 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <iostream>
-#include <stdint.h>
-#include <string.h>
-#include <sysexits.h>
+#ifndef POOL_H
+#define POOL_H
 
-#include <QFile>
-#include <QDebug>
-#include <QxtCore/QxtCommandOptions>
+#include "module.h"
+#include "pool-generated.h"
 
-#include "symbol.h"
-#include "function.h"
-
-using namespace std;
-
-#include "pool.h" // Parser
-
-void usage ( QxtCommandOptions *opt )
-{
-	opt->showUsage();
-	exit(EX_USAGE);
-}
-
-int main ( int argc, char **argv )
-{
-	QxtCommandOptions opt;
-	opt.add("output", "Where to write the output file to.", QxtCommandOptions::Required);
-	opt.alias("output", "o");
-	opt.add("help", "Display this text.");
-	opt.alias("help", "h");
-	opt.parse(argc, argv);
-	if ( opt.count("help") || opt.showUnrecognizedWarning() ) usage(&opt);
-
-	QStringList pos = opt.positional();
-	if ( pos.length() < 1 )
-	{
-		cerr << "Error: No source files." << endl;
-		usage(&opt); // No files.
-	}
-	if ( pos.length() > 1 )
-	{
-		if (opt.count("output")) // Multiple files and only one output.
-		{
-			cerr << "Error: Multiple source files but output file given." << endl;
-			usage(&opt); // No files.
-		}
-
-		for ( QStringList::Iterator i = pos.begin(); i != pos.end(); i++ )
-		{
-			system((QString(argv[0])+" '"+*i+"'").toStdString().c_str());
-		}
-		exit(0); // Our work here is done.
-	}
-
-	QFile src(pos[0]);
-	if (!src.open(QIODevice::ReadOnly))
-	{
-		cerr << "Error: could not open source file." << endl;
-		exit(EX_IOERR);
-	}
-	QString qstr = QString(src.readAll());
-	std::string sstr(qstr.toStdString());
-	Buffer b;
-	b.init(qstr);
-	//source = sstr.c_str();
-
-	/*while (yyparse())
-		;*/
-
-	PoolParser parser;
-	Module test;
-	Error e;
-
-	if (!parser.module(b, test, e))
-	{
-		cerr << e.message.toStdString();
-		exit(EX_DATAERR);
-	}
-
-	cerr << "SUCCESS!" << endl;
-
-	return 0;
-}
+#endif // POOL_H

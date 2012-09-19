@@ -52,6 +52,8 @@ QString CPPGenerator::genType(PegType *ast, GenContext *context)
     throw QString("CPPGenerator::genType");
 }
 
+#include <iostream>
+
 QString CPPGenerator::genRule(PegRule  *ast, GenContext *context, QString &retStmts, QString cutVar)
 {
     retStmts = "";

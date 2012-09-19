@@ -23,26 +23,33 @@
 [-----------------------------------------------------------------------------]]
 
 L.import "qt"
-L.import "<qpeg/qpeg.lua"
 
-S.install("LICENSE", "share/licenses/"..name.."/")
+L.qpeg = {}
 
-L.qpeg.generateParser("pool.g", ">pool-generated.h", ">pool.cpp")
+do
 
-L.qt.addInclude "<"
-L.qt.addInclude "<qpeg/"
-L.qt.addInclude ">"
+local headers = T.List(T.dir.getfiles(".", "*.h"))
+local sources = T.List(T.dir.getfiles(".", "*.cpp"))
 
-L.qt.addInclude "/usr/include/QxtCore/"
-L.qt.addLib     "QxtCore"
+L.qpeg.headers = T.List{"buffer.h", "match.h", "token.h"}:map(C.path)
+L.qpeg.sources = T.List{"buffer.cpp", "match.cpp", "token.cpp"}:map(C.path)
+L.qpeg.sources:extend(L.qpeg.headers:map(L.qt.moc))
 
-src = T.List{">pool-generated.h", ">pool.cpp"}
-src:extend(T.dir.getfiles(".", "*.cpp"))
-src:extend(T.dir.getfiles(".", "*.h"))
+L.qt.addLib "QtCore"
 
-src:extend(L.qpeg.headers)
-src:extend(L.qpeg.sources)
+local parsergen = L.qt.compile(T.List(headers):extend(sources), "@CParser")
 
-exe = L.qt.compile(src, "@poolc")
-S.addToDefault(exe)
-S.install(exe, "bin/")
+function L.qpeg.generateParser ( input, header, source )
+	input = C.path(input)
+	header = C.path(header)
+	source = C.path(source)
+
+	C.addGenerator({input}, {parsergen, input, header}, {header}, {
+		description = "Generating "..header
+	})
+	C.addGenerator({input}, {parsergen, input, source}, {source}, {
+		description = "Generating "..source
+	})
+end
+
+end
