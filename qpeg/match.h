@@ -39,7 +39,7 @@ template<class Ret> struct ParseResult
 };
 
 bool _matchStr(Buffer &buffer, QString str, Error &error);
-bool _matchAnyChar(Buffer &buffer, QString &error);
+bool _matchAnyChar(Buffer &buffer, Error &error);
 bool _matchDigit(Buffer &buffer, Error &error);
 bool _matchAlpha(Buffer &buffer, Error &error);
 bool _matchLetter(Buffer &buffer, QString &error);
