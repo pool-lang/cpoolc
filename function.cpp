@@ -26,6 +26,11 @@
 
 Symbol::SymbolID Function::id = Symbol::getUniqueID();
 
+Symbol::SymbolID Function::getID()
+{
+	return id;
+}
+
 Function::Function()
 {
 }

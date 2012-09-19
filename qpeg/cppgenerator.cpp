@@ -521,8 +521,8 @@ QString CPPGenerator::genAnyChar(PegAnyChar *ast, GenContext *context, QString &
 {
     return genFuncall(
             QString("_matchAnyChar(_b, %1, error)")
-                .arg(ast->varName),
-            QString("_matchAnyChar(_b, error)"),
+				.arg(ast->varName),
+			QString("_matchAnyChar(_b, error)"),
             ast->code,
             ast->varName,
             context,

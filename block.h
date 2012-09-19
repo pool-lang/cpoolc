@@ -22,19 +22,15 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef FUNCTION_H
-#define FUNCTION_H
+#ifndef BLOCK_H
+#define BLOCK_H
 
-#include "symbol.h"
+#include "statement.h"
 
-class Function : public Symbol
-{	
+class Block : public Statement
+{
 public:
-	static SymbolID id;
-
-	SymbolID getID();
-
-	Function();
+	Block();
 };
 
-#endif // FUNCTION_H
+#endif // BLOCK_H

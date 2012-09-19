@@ -22,19 +22,13 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef FUNCTION_H
-#define FUNCTION_H
+#ifndef STATEMENT_H
+#define STATEMENT_H
 
-#include "symbol.h"
-
-class Function : public Symbol
-{	
+class Statement
+{
 public:
-	static SymbolID id;
-
-	SymbolID getID();
-
-	Function();
+	Statement();
 };
 
-#endif // FUNCTION_H
+#endif // STATEMENT_H

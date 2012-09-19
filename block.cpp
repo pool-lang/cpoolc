@@ -22,19 +22,8 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef FUNCTION_H
-#define FUNCTION_H
+#include "block.h"
 
-#include "symbol.h"
-
-class Function : public Symbol
-{	
-public:
-	static SymbolID id;
-
-	SymbolID getID();
-
-	Function();
-};
-
-#endif // FUNCTION_H
+Block::Block()
+{
+}

@@ -26,6 +26,7 @@
 #define POOL_H
 
 #include "module.h"
+#include "function.h"
 #include "pool-generated.h"
 
 #endif // POOL_H

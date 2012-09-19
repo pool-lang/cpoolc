@@ -96,7 +96,7 @@ int main ( int argc, char **argv )
 
 	if (!parser.module(b, test, e))
 	{
-		cerr << e.message.toStdString();
+		cerr << e.message.toStdString() << endl;
 		exit(EX_DATAERR);
 	}
 
