@@ -22,9 +22,14 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "function.h"
+#ifndef CORE_H
+#define CORE_H
 
-Function::Function()
+#include "scope.h"
+
+namespace Core
 {
-	type = Symbol::Function;
+	extern Scope *createGlobalScope();
 }
+
+#endif // CORE_H

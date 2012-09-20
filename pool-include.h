@@ -22,9 +22,17 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "function.h"
+#ifndef POOLINCLUDE_H
+#define POOLINCLUDE_H
 
-Function::Function()
-{
-	type = Symbol::Function;
-}
+#include <iostream>
+
+#include <QStack>
+
+#include "module.h"
+#include "function.h"
+#include "scope.h"
+
+#include "pool.h"
+
+#endif // POOLINCLUDE_H

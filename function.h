@@ -30,10 +30,6 @@
 class Function : public Symbol
 {	
 public:
-	static SymbolID id;
-
-	SymbolID getID();
-
 	Function();
 };
 

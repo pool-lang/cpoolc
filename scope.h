@@ -22,9 +22,25 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "function.h"
+#ifndef SCOPE_H
+#define SCOPE_H
 
-Function::Function()
+#include <QHash>
+
+#include "symbol.h"
+
+class Scope
 {
-	type = Symbol::Function;
-}
+	Scope *parent;
+
+	typedef QHash<QString, Symbol*> SymbolMap;
+	SymbolMap symbols;
+public:
+	Scope(Scope *parent);
+
+	Symbol *findSymbol(QString name);
+	Scope *newSymbol(Symbol *s);
+	Scope *setParent(Scope *p);
+};
+
+#endif // SCOPE_H

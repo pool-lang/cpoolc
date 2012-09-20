@@ -1,4 +1,4 @@
-// Copyright 2011-2012 Kevin Cox
+// Copyright 2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,11 +22,37 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef POOL_H
-#define POOL_H
+#include "scope.h"
 
-#include "module.h"
-#include "function.h"
-#include "pool-generated.h"
+Scope::Scope(Scope *parent):
+	parent(parent)
+{
+}
 
-#endif // POOL_H
+Symbol *Scope::findSymbol(QString name)
+{
+	SymbolMap::Iterator i = symbols.find(name);
+
+	if ( i == symbols.end() )
+	{
+		if ( parent == NULL ) return NULL; // Not found.
+
+		return parent->findSymbol(name);
+	}
+
+	return *i;
+}
+
+Scope *Scope::newSymbol(Symbol *s)
+{
+	symbols.insert(s->getID(), s);
+
+	return this;
+}
+
+Scope *Scope::setParent(Scope *p)
+{
+	parent = p;
+
+	return this;
+}

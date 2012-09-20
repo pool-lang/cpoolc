@@ -22,9 +22,41 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "function.h"
+#ifndef VALUE_H
+#define VALUE_H
 
-Function::Function()
+#include <stdint.h>
+
+#include "scope.h"
+
+class Interface;
+
+class Value
 {
-	type = Symbol::Function;
-}
+public:
+
+	enum ValueType {
+		object,
+		interger,
+		real
+	};
+
+private:
+	Interface *type;
+	ValueType current;
+	Scope scope;
+	union {
+		qint64 intValue; //@todo Use a bigger value. (gmp?)
+		double floatValue;
+	};
+
+public:
+	Value();
+	Value(Interface *type);
+	Value(Interface *type, Scope *parent);
+
+	Value *setType(ValueType t);
+	Value *setParent(Scope *p);
+};
+
+#endif // VALUE_H

@@ -39,17 +39,18 @@ L.qt.addLib "QtCore"
 
 local parsergen = L.qt.compile(T.List(headers):extend(sources), "@CParser")
 
-function L.qpeg.generateParser ( input, header, source )
+function L.qpeg.generateParser ( input, source )
 	input = C.path(input)
-	header = C.path(header)
 	source = C.path(source)
 
-	C.addGenerator({input}, {parsergen, input, header}, {header}, {
-		description = "Generating "..header
-	})
-	C.addGenerator({input}, {parsergen, input, source}, {source}, {
+	header = T.path.splitext(source)..".h" -- qpeg automatically generates this file.
+	out = T.List{header, source}
+
+	C.addGenerator({input}, {parsergen, input, source}, out, {
 		description = "Generating "..source
 	})
+
+	return out
 end
 
 end

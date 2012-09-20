@@ -31,18 +31,23 @@
 class Symbol
 {
 public:
-	typedef unsigned int SymbolID;
-
-	static SymbolID id;
-	virtual SymbolID getID() = 0;
+	enum Type {
+		Function,
+		Interface,
+		Value
+	};
 
 private:
-	static SymbolID lastid;
+	QString id;
+
 protected:
-	static SymbolID getUniqueID();
+	Type type;
 
 public:
 	Symbol();
+
+	Type getType();
+	QString getID();
 };
 
 #endif // SYMBOL_H

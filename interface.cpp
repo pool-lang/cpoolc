@@ -24,6 +24,30 @@
 
 #include "interface.h"
 
+void Interface::init()
+{
+	type = Symbol::Interface;
+}
+
 Interface::Interface()
 {
+	init();
+}
+
+Interface::Interface(QString name):
+	name(name)
+{
+	init();
+}
+
+QString Interface::getName()
+{
+	return name;
+}
+
+Interface *Interface::setName(QString name)
+{
+	this->name = name;
+
+	return this;
 }

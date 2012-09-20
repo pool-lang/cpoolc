@@ -26,21 +26,30 @@
 #define INTERFACE_H
 
 #include <QString>
-#include <QSet>
+#include <QHash>
 
+#include "symbol.h"
 #include "overloadset.h"
 #include "variable.h"
 
-class Interface
+class Variable;
+
+class Interface: public Symbol
 {
+	QString name;
 	QString binaryname;
-	QSet<Interface*> implements;
+	QSet<QString, Interface*> implements;
 
-	QSet<OverloadSet> functions;
-	QSet<Variable*>    variables;
+	QSet<QString, OverloadSet> functions;
+	QSet<QString, Variable*>   variables;
 
+	void init();
 public:
 	Interface();
+	Interface(QString name);
+
+	QString getName();
+	Interface *setName(QString name);
 };
 
 #endif // INTERFACE_H

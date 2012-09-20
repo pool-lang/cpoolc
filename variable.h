@@ -25,11 +25,16 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
-#include <symbol.h>
+#include <QString>
 
-class Variable : public Symbol
+#include "value.h"
+
+class Variable
 {
+	QString name;
+	Interface type;
 
+	Value value;
 public:
 	Variable();
 };

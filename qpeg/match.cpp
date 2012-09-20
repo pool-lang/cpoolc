@@ -122,7 +122,7 @@ bool _matchLetter(Buffer &buffer, Token &ret, Error &error)
             if(!c.isLetter())
             {
                 buffer.restoreState(s);
-                error = Error(QString("Expected a letter or number, found '%1'").arg(buffer.readAhead(5)), s);
+				error = Error(QString("Expected a letter, found '%1'").arg(buffer.readAhead(5)), s);
                 return false;
             }
             QString lexeme;

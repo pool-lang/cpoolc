@@ -27,7 +27,6 @@ L.import "<qpeg/qpeg.lua"
 
 S.install("LICENSE", "share/licenses/"..name.."/")
 
-L.qpeg.generateParser("pool.g", ">pool-generated.h", ">pool.cpp")
 
 L.qt.addInclude "<"
 L.qt.addInclude "<qpeg/"
@@ -36,7 +35,7 @@ L.qt.addInclude ">"
 L.qt.addInclude "/usr/include/QxtCore/"
 L.qt.addLib     "QxtCore"
 
-src = T.List{">pool-generated.h", ">pool.cpp"}
+src = L.qpeg.generateParser("pool.g", "@pool.cpp")
 src:extend(T.dir.getfiles(".", "*.cpp"))
 src:extend(T.dir.getfiles(".", "*.h"))
 

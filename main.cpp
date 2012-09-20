@@ -36,7 +36,7 @@
 
 using namespace std;
 
-#include "pool.h" // Parser
+#include "pool-include.h" // Parser
 
 void usage ( QxtCommandOptions *opt )
 {

@@ -24,14 +24,16 @@
 
 #include "symbol.h"
 
-Symbol::SymbolID Symbol::lastid = 0;
-Symbol::SymbolID Symbol::id = Symbol::getUniqueID();
-
 Symbol::Symbol()
 {
 }
 
-Symbol::SymbolID Symbol::getUniqueID()
+Symbol::Type Symbol::getType()
 {
-	return lastid++;
+	return type;
+}
+
+QString Symbol::getID()
+{
+	return id;
 }

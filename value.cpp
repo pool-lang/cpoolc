@@ -22,9 +22,36 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "function.h"
+#include "value.h"
 
-Function::Function()
+Value::Value():
+	type(NULL),
+	scope(NULL)
 {
-	type = Symbol::Function;
+}
+
+Value::Value(Interface *type):
+	type(type),
+	scope(NULL)
+{
+}
+
+Value::Value(Interface *type, Scope *parent):
+	type(type),
+	scope(parent)
+{
+}
+
+Value *Value::setType(Value::ValueType t)
+{
+	type = t;
+
+	return this;
+}
+
+Value *Value::setParent(Scope *p)
+{
+	scope.parent = p;
+
+	return this;
 }

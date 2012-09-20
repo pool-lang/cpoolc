@@ -22,9 +22,16 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "function.h"
+#include "integer.h"
 
-Function::Function()
+Integer::Integer()
 {
-	type = Symbol::Function;
+}
+
+
+Integer::Integer(QString name, unsigned int size, bool sign):
+	Interface(name),
+	size(size),
+	isSigned(sign)
+{
 }

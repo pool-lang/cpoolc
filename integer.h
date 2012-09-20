@@ -22,9 +22,20 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "function.h"
+#ifndef INTEGER_H
+#define INTEGER_H
 
-Function::Function()
+#include <QString>
+
+#include "interface.h"
+
+class Integer : public Interface
 {
-	type = Symbol::Function;
-}
+	bool isSigned;
+	unsigned int size;
+public:
+	Integer();
+	Integer(QString name, unsigned int size = 0, bool sign = false);
+};
+
+#endif // INTEGER_H

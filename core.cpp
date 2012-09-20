@@ -22,9 +22,33 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "function.h"
+#include "core.h"
 
-Function::Function()
+#include <QString>
+
+#include "integer.h"
+
+namespace Core
 {
-	type = Symbol::Function;
+	Scope *createGlobalScope()
+	{
+		Scope *g = new Scope(NULL);
+
+		QString prefix = "core::";
+
+		g->newSymbol(new Integer(    "int",   0, true));
+		g->newSymbol(new Integer(   "uint",   0, false));
+
+		g->newSymbol(new Integer(   "int8",   8, true));
+		g->newSymbol(new Integer(  "uint8",   8, false));
+		g->newSymbol(new Integer(  "int16",  16, true));
+		g->newSymbol(new Integer( "uint16",  16, false));
+		g->newSymbol(new Integer(  "int32",  32, true));
+		g->newSymbol(new Integer( "uint32",  32, false));
+		g->newSymbol(new Integer(  "int64",  64, true));
+		g->newSymbol(new Integer( "uint64",  64, false));
+		g->newSymbol(new Integer( "int128", 128, true));
+		g->newSymbol(new Integer("uint128", 128, false));
+
+	}
 }
