@@ -38,10 +38,10 @@ class Interface: public Symbol
 {
 	QString name;
 	QString binaryname;
-	QSet<QString, Interface*> implements;
+	QHash<QString, Interface*> implements;
 
-	QSet<QString, OverloadSet> functions;
-	QSet<QString, Variable*>   variables;
+	QHash<QString, OverloadSet> functions;
+	QHash<QString, Variable*>   variables;
 
 	void init();
 public:

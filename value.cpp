@@ -24,18 +24,6 @@
 
 #include "value.h"
 
-Value::Value():
-	type(NULL),
-	scope(NULL)
-{
-}
-
-Value::Value(Interface *type):
-	type(type),
-	scope(NULL)
-{
-}
-
 Value::Value(Interface *type, Scope *parent):
 	type(type),
 	scope(parent)

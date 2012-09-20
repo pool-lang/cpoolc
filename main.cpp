@@ -33,6 +33,7 @@
 
 #include "symbol.h"
 #include "function.h"
+#include "core.h"
 
 using namespace std;
 
@@ -93,6 +94,8 @@ int main ( int argc, char **argv )
 	PoolParser parser;
 	Module test;
 	Error e;
+
+	parser.scopes.push(Core::createGlobalScope());
 
 	if (!parser.module(b, test, e))
 	{

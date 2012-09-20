@@ -27,6 +27,7 @@
 #include <QString>
 
 #include "integer.h"
+#include "pool-include.h"
 
 namespace Core
 {
@@ -50,5 +51,6 @@ namespace Core
 		g->newSymbol(new Integer( "int128", 128, true));
 		g->newSymbol(new Integer("uint128", 128, false));
 
+		return g;
 	}
 }

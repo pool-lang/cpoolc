@@ -84,6 +84,9 @@ identifier:QString -> IDSTART:b { ret = QString(b); }
 					 (IDCHAR:n { ret += n; })*
 					 !IDCHAR S;
 
+openScope:int -> "{" { scopes.push(new Scope(*scopes:end()); };
+closeScope:Scope -> "}" { ret = scopes.pop() };
+
 tuple:int -> "$";
 
 hashBang:int -> "#!" (!EOL .)* EOL;

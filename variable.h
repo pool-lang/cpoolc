@@ -28,6 +28,7 @@
 #include <QString>
 
 #include "value.h"
+#include "interface.h"
 
 class Variable
 {

@@ -51,9 +51,7 @@ private:
 	};
 
 public:
-	Value();
-	Value(Interface *type);
-	Value(Interface *type, Scope *parent);
+	Value(Interface *type = NULL, Scope *parent = NULL);
 
 	Value *setType(ValueType t);
 	Value *setParent(Scope *p);
