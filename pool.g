@@ -84,18 +84,26 @@ identifier:QString -> IDSTART:b { ret = QString(b); }
 					 (IDCHAR:n { ret += n; })*
 					 !IDCHAR S;
 
-openScope:int -> "{" { scopes.push(new Scope(*scopes:end()); };
-closeScope:Scope -> "}" { ret = scopes.pop() };
+openScope:int -> "{" S { scopes.push(new Scope(scopes.top())); };
+openFunction:int -> "[[" S { scopes.push(new Scope(scopes.top())); };
+closeScope:Scope* -> "}" S { ret = scopes.pop(); };
+closeFunction:Scope* -> "]]" S { ret = scopes.pop(); };
 
-tuple:int -> "$";
+tuple:int -> "$" S;
 
 hashBang:int -> "#!" (!EOL .)* EOL;
 
 module:Module -> (hashBang)? identifier:s { std::cout << s.toStdString() << std::endl; };
 
-functionBody:Function -> functionSignature? blockContents;
-functionSignature:Function -> ( S tuple S identifier? S tuple S S ":" ) /
-                              ( S identifier? S tuple? S S ":" );
+function:Function* -> openFunction
+					  functionSignature:f { ret = f; }
+					  blockContents
+					  closeFunction:s { ret->setScope(s); }
+					  ;
+
+functionSignature:Function* -> { ret = new Function(); }
+							  ((!":")* ":");
+
 
 blockContents:int -> (statement)*;
 statement:int -> (!";" .)* ";";

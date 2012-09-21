@@ -32,14 +32,14 @@ Value::Value(Interface *type, Scope *parent):
 
 Value *Value::setType(Value::ValueType t)
 {
-	type = t;
+	currentType = t;
 
 	return this;
 }
 
-Value *Value::setParent(Scope *p)
+Value *Value::setScope(Scope *s)
 {
-	scope.parent = p;
+	scope = s;
 
 	return this;
 }

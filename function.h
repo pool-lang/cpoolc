@@ -25,12 +25,26 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
+#include <QList>
+
+#include "scope.h"
+#include "statement.h"
 #include "symbol.h"
 
-class Function : public Symbol
-{	
+class Function
+{
 public:
+	Scope *scope;
+	QList<Statement> statements;
+	QList<Symbol*> arguments;
+	QList<Symbol*> returnValues;
+
+	bool isBlock;
+
 	Function();
+
+	Function *setIsBlock(bool b);
+	Function *setScope(Scope *s);
 };
 
 #endif // FUNCTION_H

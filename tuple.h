@@ -22,33 +22,12 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef INTERFACE_H
-#define INTERFACE_H
+#ifndef TUPLE_H
+#define TUPLE_H
 
-#include <QString>
-#include <QHash>
+#include <QList>
+#include "value.h"
 
-#include "symbol.h"
-#include "overloadset.h"
+typedef QList<Value*> Tuple;
 
-class Variable;
-
-class Interface: public Symbol
-{
-	QString name;
-	QString binaryname;
-	QHash<QString, Interface*> implements;
-
-	QHash<QString, OverloadSet> functions;
-	QHash<QString, Variable*>   variables;
-
-	void init();
-public:
-	Interface();
-	Interface(QString name);
-
-	QString getName();
-	Interface *setName(QString name);
-};
-
-#endif // INTERFACE_H
+#endif // TUPLE_H

@@ -24,7 +24,22 @@
 
 #include "function.h"
 
-Function::Function()
+Function::Function():
+	scope(NULL)
 {
-	type = Symbol::Function;
+	isBlock = false;
+}
+
+Function *Function::setIsBlock(bool b)
+{
+	isBlock = b;
+
+	return this;
+}
+
+Function *Function::setScope(Scope *s)
+{
+	scope = s;
+
+	return this;
 }

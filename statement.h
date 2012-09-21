@@ -25,6 +25,8 @@
 #ifndef STATEMENT_H
 #define STATEMENT_H
 
+#include "scope.h"
+
 class Statement
 {
 public:

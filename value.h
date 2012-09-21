@@ -34,7 +34,6 @@ class Interface;
 class Value
 {
 public:
-
 	enum ValueType {
 		object,
 		interger,
@@ -43,7 +42,7 @@ public:
 
 private:
 	Interface *type;
-	ValueType current;
+	ValueType currentType;
 	Scope scope;
 	union {
 		qint64 intValue; //@todo Use a bigger value. (gmp?)
@@ -54,7 +53,7 @@ public:
 	Value(Interface *type = NULL, Scope *parent = NULL);
 
 	Value *setType(ValueType t);
-	Value *setParent(Scope *p);
+	Value *setScope(Scope *s);
 };
 
 #endif // VALUE_H

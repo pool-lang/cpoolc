@@ -22,33 +22,4 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef INTERFACE_H
-#define INTERFACE_H
-
-#include <QString>
-#include <QHash>
-
-#include "symbol.h"
-#include "overloadset.h"
-
-class Variable;
-
-class Interface: public Symbol
-{
-	QString name;
-	QString binaryname;
-	QHash<QString, Interface*> implements;
-
-	QHash<QString, OverloadSet> functions;
-	QHash<QString, Variable*>   variables;
-
-	void init();
-public:
-	Interface();
-	Interface(QString name);
-
-	QString getName();
-	Interface *setName(QString name);
-};
-
-#endif // INTERFACE_H
+#include "tuple.h"
