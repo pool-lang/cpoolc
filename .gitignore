@@ -9,6 +9,7 @@ CMakeLists.txt.user
 *.config
 *.creator
 *.creator.user
+*.creator.user.*
 *.user
 *.files
 *.includes
