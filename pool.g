@@ -93,7 +93,7 @@ tuple:int -> "$" S;
 
 hashBang:int -> "#!" (!EOL .)* EOL;
 
-module:Module -> (hashBang)? identifier:s { std::cout << s.toStdString() << std::endl; };
+module:Module -> (hashBang)? function:s { qDebug() << s; };
 
 function:Function* -> openFunction
 					  functionSignature:f { ret = f; }
@@ -102,8 +102,8 @@ function:Function* -> openFunction
 					  ;
 
 functionSignature:Function* -> { ret = new Function(); }
-							  ((!":")* ":");
+							  ((!":" .)* ":") S;
 
 
-blockContents:int -> (statement)*;
-statement:int -> (!";" .)* ";";
+blockContents:int -> (statement? ";")*;
+statement:int -> S (!";" .)* S;
