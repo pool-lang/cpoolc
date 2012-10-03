@@ -28,6 +28,7 @@
 #include <QSet>
 
 #include "symbol.h"
+#include "buffer.h"
 
 class Module
 {
@@ -35,6 +36,8 @@ class Module
 
 public:
 	Module();
+
+	static Module *parse(Buffer buf);
 };
 
 #endif // MODULE_H

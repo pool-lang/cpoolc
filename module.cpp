@@ -24,6 +24,25 @@
 
 #include "module.h"
 
+#include <QDebug>
+
+#include "smartbuffer.h"
+
 Module::Module()
 {
+}
+
+Module *Module::parse(Buffer buf)
+{
+	SmartBuffer b(buf);
+	b.seek(0);
+
+	///// Check for Hash-Bang.
+	if ( b.look(2) == "#!" )
+	{
+		while ( b.pop() != '\n' )
+			;
+	}
+
+	qDebug() << b.position();
 }

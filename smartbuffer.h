@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,73 +22,35 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <iostream>
-#include <stdint.h>
-#include <string.h>
-#include <sysexits.h>
+#ifndef SMARTBUFFER_H
+#define SMARTBUFFER_H
 
-#include <QFile>
+#include <QVector>
 #include <QDebug>
-#include <QxtCore/QxtCommandOptions>
 
-#include "symbol.h"
-#include "function.h"
-#include "core.h"
 #include "buffer.h"
 
-using namespace std;
-
-#include "pool-include.h" // Parser
-
-void usage ( QxtCommandOptions *opt )
+class SmartBuffer: public Buffer
 {
-	opt->showUsage();
-	exit(EX_USAGE);
-}
+public:
+	struct Position {
+		uint line;
+		uint column;
 
-int main ( int argc, char **argv )
-{
-	QxtCommandOptions opt;
-	opt.add("output", "Where to write the output file to.", QxtCommandOptions::Required);
-	opt.alias("output", "o");
-	opt.add("help", "Display this text.");
-	opt.alias("help", "h");
-	opt.parse(argc, argv);
-	if ( opt.count("help") || opt.showUnrecognizedWarning() ) usage(&opt);
+		Position(uint line = 0, uint col = 0);
+		int operator ==(const Position &p) const;
+	};
 
-	QStringList pos = opt.positional();
-	if ( pos.length() < 1 )
-	{
-		cerr << "Error: No source files." << endl;
-		usage(&opt); // No files.
-	}
-	if ( pos.length() > 1 )
-	{
-		if (opt.count("output")) // Multiple files and only one output.
-		{
-			cerr << "Error: Multiple source files but output file given." << endl;
-			usage(&opt); // No files.
-		}
+private:
+	QVector<Position> posindex;
 
-		for ( QStringList::Iterator i = pos.begin(); i != pos.end(); i++ )
-		{
-			system((QString(argv[0])+" '"+*i+"'").toStdString().c_str());
-		}
-		exit(0); // Our work here is done.
-	}
+	void init();
+public:
+	SmartBuffer(Buffer b);
 
-	QFile src(pos[0]);
-	if (!src.open(QIODevice::ReadOnly))
-	{
-		cerr << "Error: could not open source file." << endl;
-		exit(EX_IOERR);
-	}
-	Buffer b(src.readAll());
+	Position position();
+};
 
-	Module *mod = Module::parse(b);
+QDebug operator<<(QDebug dbg, const SmartBuffer::Position &p);
 
-
-	cerr << "SUCCESS!" << endl;
-
-	return 0;
-}
+#endif // SMARTBUFFER_H

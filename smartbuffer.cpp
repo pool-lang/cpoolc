@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,73 +22,80 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <iostream>
-#include <stdint.h>
-#include <string.h>
-#include <sysexits.h>
+#include "smartbuffer.h"
 
-#include <QFile>
-#include <QDebug>
-#include <QxtCore/QxtCommandOptions>
+#include "test.h"
 
-#include "symbol.h"
-#include "function.h"
-#include "core.h"
-#include "buffer.h"
-
-using namespace std;
-
-#include "pool-include.h" // Parser
-
-void usage ( QxtCommandOptions *opt )
+SmartBuffer::SmartBuffer(Buffer b):
+	Buffer(b),
+	posindex(b.length())
 {
-	opt->showUsage();
-	exit(EX_USAGE);
+	init();
 }
 
-int main ( int argc, char **argv )
+
+SmartBuffer::Position::Position(uint line, uint col):
+	line(line),
+	column(col)
 {
-	QxtCommandOptions opt;
-	opt.add("output", "Where to write the output file to.", QxtCommandOptions::Required);
-	opt.alias("output", "o");
-	opt.add("help", "Display this text.");
-	opt.alias("help", "h");
-	opt.parse(argc, argv);
-	if ( opt.count("help") || opt.showUnrecognizedWarning() ) usage(&opt);
+}
 
-	QStringList pos = opt.positional();
-	if ( pos.length() < 1 )
+int SmartBuffer::Position::operator ==(const SmartBuffer::Position &p) const
+{
+	return ( this->line == p.line ) && ( this->column == p.column );
+}
+
+void SmartBuffer::init()
+{
+	uint prev = tell();
+	seek(0);
+
+	Position p(0,0);
+	for ( uint i = 0; i < length(); i++ )
 	{
-		cerr << "Error: No source files." << endl;
-		usage(&opt); // No files.
-	}
-	if ( pos.length() > 1 )
-	{
-		if (opt.count("output")) // Multiple files and only one output.
+		QChar c = pop();
+		if ( c == '\n' )
 		{
-			cerr << "Error: Multiple source files but output file given." << endl;
-			usage(&opt); // No files.
+			p.line++;
+			p.column = 0;
 		}
+		else p.column++;
 
-		for ( QStringList::Iterator i = pos.begin(); i != pos.end(); i++ )
-		{
-			system((QString(argv[0])+" '"+*i+"'").toStdString().c_str());
-		}
-		exit(0); // Our work here is done.
+		posindex[i] = p;
 	}
+}
 
-	QFile src(pos[0]);
-	if (!src.open(QIODevice::ReadOnly))
-	{
-		cerr << "Error: could not open source file." << endl;
-		exit(EX_IOERR);
-	}
-	Buffer b(src.readAll());
+SmartBuffer::Position SmartBuffer::position()
+{
+	return posindex[tell()];
+}
+#ifdef TEST
+TEST(SmartBuffer, position)
+{
+	SmartBuffer b(Buffer("a string\ntwo lines"));
+	//                    12345678 0123456789 // Column
+	//                    0123456789012345678 // Index
 
-	Module *mod = Module::parse(b);
+	EXPECT_EQ('a', b.tell());
+	EXPECT_EQ(SmartBuffer::Position(0,0), b.position());
+	b.seek(1);
+	EXPECT_EQ(' ', b.tell());
+	EXPECT_EQ(SmartBuffer::Position(0,1), b.position());
+	b.seek(7);
+	EXPECT_EQ('g', b.tell());
+	EXPECT_EQ(SmartBuffer::Position(0,7), b.position());
+	b.seek(8);
+	EXPECT_EQ('\n', b.tell());
+	EXPECT_EQ(SmartBuffer::Position(1,0), b.position());
+	b.seek(9);
+	EXPECT_EQ('t', b.tell());
+	EXPECT_EQ(SmartBuffer::Position(1,1), b.position());
+}
+#endif
 
+QDebug operator<<(QDebug dbg, const SmartBuffer::Position &p)
+{
+	dbg.nospace() << "{l:" << p.line << ", c:" << p.column << "}";
 
-	cerr << "SUCCESS!" << endl;
-
-	return 0;
+	return dbg.space();
 }

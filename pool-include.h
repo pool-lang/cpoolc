@@ -33,6 +33,6 @@
 #include "function.h"
 #include "scope.h"
 
-#include "pool.h"
+//#include "pool.h"
 
 #endif // POOLINCLUDE_H

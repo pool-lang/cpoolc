@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,73 +22,44 @@
 *                                                                              *
 *******************************************************************************/
 
-#include <iostream>
-#include <stdint.h>
-#include <string.h>
-#include <sysexits.h>
+#ifndef BUFFER_H
+#define BUFFER_H
 
-#include <QFile>
-#include <QDebug>
-#include <QxtCore/QxtCommandOptions>
+#include <QString>
 
-#include "symbol.h"
-#include "function.h"
-#include "core.h"
-#include "buffer.h"
-
-using namespace std;
-
-#include "pool-include.h" // Parser
-
-void usage ( QxtCommandOptions *opt )
+class Buffer
 {
-	opt->showUsage();
-	exit(EX_USAGE);
-}
+public:
+	static const QChar END;
+	//typedef uint Position;
 
-int main ( int argc, char **argv )
-{
-	QxtCommandOptions opt;
-	opt.add("output", "Where to write the output file to.", QxtCommandOptions::Required);
-	opt.alias("output", "o");
-	opt.add("help", "Display this text.");
-	opt.alias("help", "h");
-	opt.parse(argc, argv);
-	if ( opt.count("help") || opt.showUnrecognizedWarning() ) usage(&opt);
+private:
+	QString data;
+	uint pos;
 
-	QStringList pos = opt.positional();
-	if ( pos.length() < 1 )
-	{
-		cerr << "Error: No source files." << endl;
-		usage(&opt); // No files.
-	}
-	if ( pos.length() > 1 )
-	{
-		if (opt.count("output")) // Multiple files and only one output.
-		{
-			cerr << "Error: Multiple source files but output file given." << endl;
-			usage(&opt); // No files.
-		}
+public:
+	Buffer(QString data);
+	Buffer(const Buffer &buffer);
 
-		for ( QStringList::Iterator i = pos.begin(); i != pos.end(); i++ )
-		{
-			system((QString(argv[0])+" '"+*i+"'").toStdString().c_str());
-		}
-		exit(0); // Our work here is done.
-	}
+	uint toEnd ();
+	bool canRead(uint count);
 
-	QFile src(pos[0]);
-	if (!src.open(QIODevice::ReadOnly))
-	{
-		cerr << "Error: could not open source file." << endl;
-		exit(EX_IOERR);
-	}
-	Buffer b(src.readAll());
+	void seek(uint where);
+	void move(int off);
+	uint tell();
 
-	Module *mod = Module::parse(b);
+	uint length();
 
+	QChar pop();
+	QChar peek();
 
-	cerr << "SUCCESS!" << endl;
+	QString read();
+	QString read(uint count);
 
-	return 0;
-}
+	QString look();
+	QString look(uint count);
+
+	Buffer copy();
+};
+
+#endif // BUFFER_H

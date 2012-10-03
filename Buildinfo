@@ -23,24 +23,34 @@
 [-----------------------------------------------------------------------------]]
 
 L.import "qt"
-L.import "<qpeg/qpeg.lua"
 
 S.install("LICENSE", "share/licenses/"..name.."/")
 
-
 L.qt.addInclude "<"
-L.qt.addInclude "<qpeg/"
 L.qt.addInclude ">"
+
+L.qt.addLib     "QtCore"
 
 L.qt.addInclude "/usr/include/QxtCore/"
 L.qt.addLib     "QxtCore"
 
-src = L.qpeg.generateParser("pool.g", "@pool.cpp")
+src = T.List()
 src:extend(T.dir.getfiles(".", "*.cpp"))
 src:extend(T.dir.getfiles(".", "*.h"))
 
-src:extend(L.qpeg.headers)
-src:extend(L.qpeg.sources)
+src = src:map(C.path)
+src:remove_value(C.path"test.cpp")
+T.pretty.dump(src)
+
+if D.test then
+	L.qt.addLib{"gtest", "pthread"}
+	local files = T.List{"test.cpp"}:extend(src) -- Compile the tests
+	files:remove_value(C.path"main.cpp")
+
+	local test = L.qt.compile(files, "@test")
+	S.addToTarget("test", test)
+	S.addMagicToDefault "test"
+end
 
 exe = L.qt.compile(src, "@poolc")
 S.addToDefault(exe)

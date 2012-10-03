@@ -29,9 +29,9 @@ name    = "cpoolc"
 version = "0.1.0"
 
 if D.test then
-	S.cpp.define{["TEST"] = true}
+ L.qt.define{["TEST"] = true}
 end
 
 if not D.debug then
-	S.cpp.optimization = "full"
+	L.qt.optimization = "full"
 end
