@@ -34,7 +34,7 @@
 #include "symbol.h"
 #include "function.h"
 #include "core.h"
-#include "buffer.h"
+#include "smartbuffer.h"
 
 using namespace std;
 
@@ -83,9 +83,9 @@ int main ( int argc, char **argv )
 		cerr << "Error: could not open source file." << endl;
 		exit(EX_IOERR);
 	}
-	Buffer b(src.readAll());
+	SmartBuffer b(&src);
 
-	Module *mod = Module::parse(b);
+	Module *mod = Module::parse(&b);
 
 
 	cerr << "SUCCESS!" << endl;

@@ -26,26 +26,36 @@
 
 #include "test.h"
 
-SmartBuffer::SmartBuffer(Buffer b):
+SmartBuffer::SmartBuffer(Buffer b, QString file):
 	Buffer(b),
-	posindex(b.length())
+	posindex(b.length()),
+	fname(file)
 {
 	init();
 }
 
+SmartBuffer::SmartBuffer(QFile *file):
+	Buffer(file->readAll()),
+	fname(file->fileName())
+{
+}
 
-SmartBuffer::Position::Position(uint line, uint col):
+
+SmartBuffer::Position::Position(QString file, uint line, uint col):
+	file(file),
 	line(line),
 	column(col),
 	eof(false)
 {
 }
 
-int SmartBuffer::Position::operator ==(const SmartBuffer::Position &p) const
+int SmartBuffer::Position::operator ==(const SmartBuffer::Position &that) const
 {
-	if ( this->eof && p.eof ) return true;
+	if ( this->file != that.file ) return false;
 
-	return ( this->line == p.line ) && ( this->column == p.column );
+	if ( this->eof  && that.eof  ) return true;
+
+	return ( this->line == that.line ) && ( this->column == that.column );
 }
 
 void SmartBuffer::init()
@@ -53,7 +63,7 @@ void SmartBuffer::init()
 	uint prev = tell();
 	seek(0);
 
-	Position p(0,0);
+	Position p(fname, 0,0);
 	for ( uint i = 0; i < length(); i++ )
 	{
 		posindex[i] = p;
@@ -80,27 +90,27 @@ SmartBuffer::Position SmartBuffer::position()
 #ifdef TEST
 TEST(SmartBuffer, position)
 {
-	SmartBuffer b(Buffer("a string\ntwo lines"));
+	SmartBuffer b(Buffer("a string\ntwo lines"), "test");
 	//                    12345678 0123456789 // Column
 	//                    0123456789012345678 // Index
 
 	EXPECT_EQ('a', b.peek());
-	EXPECT_EQ(SmartBuffer::Position(0,0), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test", 0,0), b.position());
 	b.seek(1);
 	EXPECT_EQ(' ', b.peek());
-	EXPECT_EQ(SmartBuffer::Position(0,1), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",0,1), b.position());
 	b.seek(7);
 	EXPECT_EQ('g', b.peek());
-	EXPECT_EQ(SmartBuffer::Position(0,7), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",0,7), b.position());
 	b.seek(8);
 	EXPECT_EQ('\n', b.peek());
-	EXPECT_EQ(SmartBuffer::Position(0,8), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",0,8), b.position());
 	b.seek(9);
 	EXPECT_EQ('t', b.peek());
-	EXPECT_EQ(SmartBuffer::Position(1,0), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",1,0), b.position());
 	b.seek(10);
 	EXPECT_EQ('w', b.peek());
-	EXPECT_EQ(SmartBuffer::Position(1,1), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",1,1), b.position());
 }
 #endif
 

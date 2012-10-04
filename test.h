@@ -34,6 +34,19 @@
 
 	#define RUN_IFACE_TEST(iface, impl) TEST(impl, iface##Compatability) \
 	                                { test##iface<impl>(); }
+\
+	// Define Streaming Operators for some Qt types.
+	#include <QString>
+	static ::std::ostream& operator<<(::std::ostream& os, const QString &p)
+	{
+		os << "here";
+		os << p.toStdString();
+	}
+	static ::std::ostream& operator<<(::std::ostream& os, const QChar &p)
+	{
+		os << '"' << p.toAscii() << '"';
+	}
+
 #else ///// NOT TESTING
 	#define RUN_IFACE_TEST(iface, impl) // Gone
 #endif

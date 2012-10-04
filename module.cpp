@@ -29,20 +29,20 @@
 
 #include "smartbuffer.h"
 #include "scope.h"
+#include "statement.h"
 
 Module::Module()
 {
 }
 
-Module *Module::parse(Buffer buf)
+Module *Module::parse(SmartBuffer *b)
 {
-	SmartBuffer b(buf);
-	b.seek(0);
+	b->seek(0);
 
 	///// Check for Hash-Bang.
-	if ( b.look(2) == "#!" )
+	if ( b->look(2) == "#!" )
 	{
-		while ( b.pop() != '\n' )
+		while ( b->pop() != '\n' )
 			;
 	}
 
@@ -51,7 +51,6 @@ Module *Module::parse(Buffer buf)
 
 	while (true)
 	{
-		b->consumeWhitespace();
-
+		parseStatement();
 	}
 }

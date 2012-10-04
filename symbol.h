@@ -55,7 +55,7 @@ public:
 	QString getID();
 
 	static Symbol *parseDecleartion(SmartBuffer *b, Scope *s);
-	static QString *parseIdentifier(SmartBuffer *b);
+	static QString parseIdentifier(SmartBuffer *b);
 };
 
 #endif // SYMBOL_H

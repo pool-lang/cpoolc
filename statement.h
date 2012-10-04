@@ -26,11 +26,14 @@
 #define STATEMENT_H
 
 #include "scope.h"
+#include "smartbuffer.h"
 
 class Statement
 {
 public:
 	Statement();
+
+	static Statement *parseStatement(SmartBuffer *b, Scope *Scope)
 };
 
 #endif // STATEMENT_H

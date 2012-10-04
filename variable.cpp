@@ -26,11 +26,23 @@
 
 #include <QRegExp>
 
+#include "error.h"
+
 Variable::Variable()
 {
 }
 
 Variable *Variable::parseVariableDeclearation(SmartBuffer *b)
 {
-	QRegExp re("var\w+")
+	if ( b->read(3) != "var" ) return NULL;
+	b->consumeWhitespace();
+
+	while ( true )
+	{
+		QString id = Symbol::parseIdentifier(b);
+		if ( id == "" ) Error::fatal("Expected identifier.", b);
+
+		QChar c = b->pop();
+
+	}
 }

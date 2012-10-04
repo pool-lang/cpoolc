@@ -23,7 +23,16 @@
 *******************************************************************************/
 
 #include "statement.h"
+#include "symbol.h"
 
 Statement::Statement()
 {
+}
+
+Statement *Statement::parseStatement(SmartBuffer *b, Scope *scope)
+{
+	Symbol *s = Symbol::parseDecleartion(b, s);
+	if (s) return s;
+
+	return NULL;
 }

@@ -1,4 +1,4 @@
-// Copyright 2011-2012 Kevin Cox
+// Copyright 2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,43 +22,17 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef SMARTBUFFER_H
-#define SMARTBUFFER_H
+#ifndef ERROR_H
+#define ERROR_H
 
-#include <QVector>
-#include <QDebug>
-#include <QFile>
+#include <QString>
 
-#include "buffer.h"
+#include "smartbuffer.h"
 
-class SmartBuffer: public Buffer
+namespace Error
 {
-public:
-	struct Position {
-		QString file;
-		uint line;
-		uint column;
+	void reportMessage ( QString msg, SmartBuffer *buf = NULL);
+	void fatal ( QString msg, SmartBuffer *buf = NULL);
+}
 
-		bool eof;
-
-		Position(QString file = "", uint line = 0, uint col = 0);
-		int operator ==(const Position &p) const;
-	};
-
-private:
-	QVector<Position> posindex;
-	QString fname;
-
-	void init();
-public:
-	SmartBuffer(Buffer b, QString file = "");
-	SmartBuffer(QFile *file);
-
-	Position position();
-
-	void consumeWhitespace();
-};
-
-QDebug operator<<(QDebug dbg, const SmartBuffer::Position &p);
-
-#endif // SMARTBUFFER_H
+#endif // ERROR_H

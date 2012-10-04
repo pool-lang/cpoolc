@@ -1,4 +1,4 @@
-// Copyright 2011-2012 Kevin Cox
+// Copyright 2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,43 +22,15 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef SMARTBUFFER_H
-#define SMARTBUFFER_H
+#ifndef VALUESTATEMENT_H
+#define VALUESTATEMENT_H
 
-#include <QVector>
-#include <QDebug>
-#include <QFile>
+#include "value.h"
 
-#include "buffer.h"
-
-class SmartBuffer: public Buffer
+class ValueStatement : public Value
 {
 public:
-	struct Position {
-		QString file;
-		uint line;
-		uint column;
-
-		bool eof;
-
-		Position(QString file = "", uint line = 0, uint col = 0);
-		int operator ==(const Position &p) const;
-	};
-
-private:
-	QVector<Position> posindex;
-	QString fname;
-
-	void init();
-public:
-	SmartBuffer(Buffer b, QString file = "");
-	SmartBuffer(QFile *file);
-
-	Position position();
-
-	void consumeWhitespace();
+	ValueStatement();
 };
 
-QDebug operator<<(QDebug dbg, const SmartBuffer::Position &p);
-
-#endif // SMARTBUFFER_H
+#endif // VALUESTATEMENT_H

@@ -26,6 +26,9 @@
 
 #include <QRegExp>
 
+#include "test.h"
+#include "variable.h"
+
 Symbol::Symbol()
 {
 }
@@ -44,24 +47,63 @@ Symbol *Symbol::parseDecleartion(SmartBuffer *b, Scope *s)
 {
 	if ( b->read(3) == "var" )
 	{
-		return
+		Variable *v = Variable::parseVariableDeclearation(b);
+		return NULL;
 	}
 	else return NULL;
 }
 
-QString *Symbol::parseIdentifier(SmartBuffer *b)
+QString Symbol::parseIdentifier(SmartBuffer *b)
 {
 	QString id;
 
-	QChar c = b->pop();
-	if ( c )
+	QChar c = b->peek();
+	if (( c >= 'a' && c <= 'z' ) ||
+		( c >= 'A' && c <= 'Z' ) ||
+		( c == '_' )
+	   )
+	{
+		id.append(c);
+		b->move(1);
+	}
+	else return "";
 
 	while (true)
 	{
-		c = b->pop();
+		c = b->peek();
 
-		if
+		if (( c >= 'a' && c <= 'z' ) ||
+			( c >= 'A' && c <= 'Z' ) ||
+			( c >= '0' && c <= '9' ) ||
+			( c == '_' )
+		   )
+		{
+			id.append(c);
+			b->move(1);
+		}
+		else return id;
 	}
-
-	b->move(-1);
 }
+#ifdef TEST
+TEST(SmartBuffer, parseIdentifier)
+{
+	SmartBuffer b(Buffer("id _id 9not id943 I_d9s"));
+	//                    01234567890123456789012
+
+	EXPECT_EQ("id", Symbol::parseIdentifier(&b));
+	b.consumeWhitespace();
+	EXPECT_EQ("_id", Symbol::parseIdentifier(&b));
+	b.consumeWhitespace();
+	EXPECT_EQ("", Symbol::parseIdentifier(&b));
+
+	b.seek(12);
+	EXPECT_EQ("id943", Symbol::parseIdentifier(&b));
+	b.consumeWhitespace();
+	EXPECT_EQ("I_d9s", Symbol::parseIdentifier(&b));
+	b.consumeWhitespace();
+	EXPECT_EQ("", Symbol::parseIdentifier(&b));
+	b.consumeWhitespace();
+	EXPECT_EQ("", Symbol::parseIdentifier(&b));
+	b.consumeWhitespace();
+}
+#endif

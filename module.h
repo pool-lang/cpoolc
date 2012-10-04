@@ -37,7 +37,7 @@ class Module
 public:
 	Module();
 
-	static Module *parse(Buffer buf);
+	static Module *parse(SmartBuffer *buf);
 };
 
 #endif // MODULE_H
