@@ -24,6 +24,13 @@
 
 #include "variable.h"
 
+#include <QRegExp>
+
 Variable::Variable()
 {
+}
+
+Variable *Variable::parseVariableDeclearation(SmartBuffer *b)
+{
+	QRegExp re("var\w+")
 }

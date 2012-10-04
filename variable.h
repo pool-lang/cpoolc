@@ -29,6 +29,7 @@
 
 #include "value.h"
 #include "interface.h"
+#include "smartbuffer.h"
 
 class Variable
 {
@@ -38,6 +39,8 @@ class Variable
 	Value value;
 public:
 	Variable();
+
+	static Variable *parseVariableDeclearation(SmartBuffer *b);
 };
 
 #endif // VARIABLE_H

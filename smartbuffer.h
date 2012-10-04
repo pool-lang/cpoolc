@@ -37,6 +37,8 @@ public:
 		uint line;
 		uint column;
 
+		bool eof;
+
 		Position(uint line = 0, uint col = 0);
 		int operator ==(const Position &p) const;
 	};
@@ -49,6 +51,8 @@ public:
 	SmartBuffer(Buffer b);
 
 	Position position();
+
+	void consumeWhitespace();
 };
 
 QDebug operator<<(QDebug dbg, const SmartBuffer::Position &p);

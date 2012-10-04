@@ -27,6 +27,8 @@
 
 #include <QHash>
 
+class Scope;
+
 #include "symbol.h"
 
 class Scope

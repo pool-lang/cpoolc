@@ -24,9 +24,11 @@
 
 #include "module.h"
 
+#include <iostream>
 #include <QDebug>
 
 #include "smartbuffer.h"
+#include "scope.h"
 
 Module::Module()
 {
@@ -44,5 +46,12 @@ Module *Module::parse(Buffer buf)
 			;
 	}
 
-	qDebug() << b.position();
+	Scope *s = new Scope(NULL);
+	Module *m = new Module();
+
+	while (true)
+	{
+		b->consumeWhitespace();
+
+	}
 }

@@ -24,6 +24,8 @@
 
 #include "symbol.h"
 
+#include <QRegExp>
+
 Symbol::Symbol()
 {
 }
@@ -36,4 +38,30 @@ Symbol::Type Symbol::getType()
 QString Symbol::getID()
 {
 	return id;
+}
+
+Symbol *Symbol::parseDecleartion(SmartBuffer *b, Scope *s)
+{
+	if ( b->read(3) == "var" )
+	{
+		return
+	}
+	else return NULL;
+}
+
+QString *Symbol::parseIdentifier(SmartBuffer *b)
+{
+	QString id;
+
+	QChar c = b->pop();
+	if ( c )
+
+	while (true)
+	{
+		c = b->pop();
+
+		if
+	}
+
+	b->move(-1);
 }

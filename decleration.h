@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,40 +22,18 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef SYMBOL_H
-#define SYMBOL_H
-
-#include <stdint.h>
-#include <QString>
-
-class Symbol;
+#ifndef DECLERATION_H
+#define DECLERATION_H
 
 #include "smartbuffer.h"
 #include "scope.h"
 
-class Symbol
+class Decleration
 {
 public:
-	enum Type {
-		Function,
-		Interface,
-		Value
-	};
+	Decleration();
 
-private:
-	QString id;
 
-protected:
-	Type type;
-
-public:
-	Symbol();
-
-	Type getType();
-	QString getID();
-
-	static Symbol *parseDecleartion(SmartBuffer *b, Scope *s);
-	static QString *parseIdentifier(SmartBuffer *b);
 };
 
-#endif // SYMBOL_H
+#endif // DECLERATION_H
