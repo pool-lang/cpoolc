@@ -26,8 +26,7 @@
 #define VALUE_H
 
 #include <stdint.h>
-
-#include "scope.h"
+#include <QtCore>
 
 class Interface;
 
@@ -43,17 +42,15 @@ public:
 private:
 	Interface *type;
 	ValueType currentType;
-	Scope scope;
 	union {
 		qint64 intValue; //@todo Use a bigger value. (gmp?)
 		double floatValue;
 	};
 
 public:
-	Value(Interface *type = NULL, Scope *parent = NULL);
+	Value(Interface *type = NULL);
 
 	Value *setType(ValueType t);
-	Value *setScope(Scope *s);
 };
 
 #endif // VALUE_H

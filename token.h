@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,24 +22,38 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "statement.h"
+#ifndef TOKEN_H
+#define TOKEN_H
 
-#include <QDebug>
+#include <QString>
 
-#include "symbol.h"
-#include "decleration.h"
+#include "smartbuffer.h"
 
-Statement::Statement()
+class Token
 {
-//	type = Token::Statement;
-}
+public:
+	enum Type {
+		Undefined,
+		Character,
+		String,
+		Identifier,
+		Operator,
+	};
 
-Statement *Statement::parseStatement(SmartBuffer *b)
-{
-	Statement *r = new Statement();
+	typedef QList<Token> List;
 
-	::Decleration *d = ::Decleration::parseDecleartion(b);
-	qDebug() << d;
+	QString data;
+	SmartBuffer::Position defined;
 
-	return d;
-}
+	Type type;
+
+public:
+	Token();
+	Token(Type type, QString data);
+
+	static Token::List tokenize(SmartBuffer *b);
+};
+
+QDebug operator<<(QDebug dbg, const Token &t);
+
+#endif // TOKEN_H

@@ -34,7 +34,7 @@ namespace Error
 		if ( buf )
 		{
 			SmartBuffer::Position p = buf->position();
-			std::cerr << QString("%1:%2:%3: ").arg(p.file, p.line, p.column).toStdString();
+			std::cerr << QString("%1:%2:%3: ").arg(p.file).arg(p.line).arg(p.column).toStdString();
 		}
 
 		std::cerr << "Error: " << msg.toStdString() << std::endl;

@@ -24,12 +24,15 @@
 
 #include "scope.h"
 
-Scope::Scope(Scope *parent):
-	parent(parent)
+#include "statement.h"
+#include "error.h"
+
+Scope::Scope():
+	parent(NULL)
 {
 }
 
-Symbol *Scope::findSymbol(QString name)
+Variable *Scope::findVariable(QString name)
 {
 	SymbolMap::Iterator i = symbols.find(name);
 
@@ -37,17 +40,18 @@ Symbol *Scope::findSymbol(QString name)
 	{
 		if ( parent == NULL ) return NULL; // Not found.
 
-		return parent->findSymbol(name);
+		return parent->findVariable(name);
 	}
 
 	return *i;
 }
 
-Scope *Scope::newSymbol(Symbol *s)
+Variable *Scope::newVariable(QString name)
 {
-	symbols.insert(s->getID(), s);
+	Variable *v = new Variable(name);
+	symbols.insert(name, v);
 
-	return this;
+	return v;
 }
 
 Scope *Scope::setParent(Scope *p)
@@ -55,4 +59,21 @@ Scope *Scope::setParent(Scope *p)
 	parent = p;
 
 	return this;
+}
+
+Scope *Scope::parseScope(SmartBuffer *b)
+{
+	Scope *r = new Scope();
+
+	while (true)
+	{
+		b->consumeWhitespace();
+		Statement *s = Statement::parseStatement(b);
+
+		if ( s == NULL ) break;
+
+		r->statements.append(*s);
+	}
+
+	return r;
 }

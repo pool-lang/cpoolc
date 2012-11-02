@@ -34,11 +34,14 @@
 class Variable
 {
 	QString name;
-	Interface type;
+	Interface *type;
 
 	Value value;
 public:
 	Variable();
+	Variable(QString name);
+
+	QString getName();
 
 	static Variable *parseVariableDeclearation(SmartBuffer *b);
 };

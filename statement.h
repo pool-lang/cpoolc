@@ -25,15 +25,19 @@
 #ifndef STATEMENT_H
 #define STATEMENT_H
 
-#include "scope.h"
-#include "smartbuffer.h"
+#include <QList>
 
-class Statement
+#include "smartbuffer.h"
+#include "token.h"
+
+class Statement : public Token
 {
+protected:
+	Token::List tokens;
 public:
 	Statement();
 
-	static Statement *parseStatement(SmartBuffer *b, Scope *Scope)
+	static Statement *parseStatement(SmartBuffer *b);
 };
 
 #endif // STATEMENT_H

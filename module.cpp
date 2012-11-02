@@ -46,11 +46,7 @@ Module *Module::parse(SmartBuffer *b)
 			;
 	}
 
-	Scope *s = new Scope(NULL);
-	Module *m = new Module();
+	Scope *s = Scope::parseScope(b);
 
-	while (true)
-	{
-		parseStatement();
-	}
+	return NULL;
 }

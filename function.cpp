@@ -24,22 +24,42 @@
 
 #include "function.h"
 
-Function::Function():
-	scope(NULL)
+#include "tuple.h"
+
+Function::Function(bool isblock):
+	Decleration()
 {
-	isBlock = false;
+	type = isblock?Block:Function_t;
 }
 
-Function *Function::setIsBlock(bool b)
+Function *Function::parseFunctionDecleration(SmartBuffer *b)
 {
-	isBlock = b;
+	Function *f = new Function();
+	uint pos = b->tell();
 
-	return this;
-}
+	if ( b->peek()  == '{' )
+	{
+		b->pop();
+		f->type = Block;
+	}
+	else if ( b->look(2) == "[[" )
+	{
+		b->move(2);
+	}
+	else
+	{
+		f->type == Invalid;
+	}
 
-Function *Function::setScope(Scope *s)
-{
-	scope = s;
+	b->consumeWhitespace();
 
-	return this;
+	::Tuple *args = NULL;
+	::Tuple *ret  = NULL;
+
+	if ( b->peek() == '(' )
+	{
+		args = ::Tuple::parseTuple(b);
+	}
+
+	return f;
 }

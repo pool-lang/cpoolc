@@ -42,7 +42,7 @@ public:
 	Buffer(const Buffer &buffer);
 
 	uint toEnd ();
-	bool canRead(uint count);
+	bool canRead(uint count = 1);
 
 	void seek(uint where);
 	void move(int off);
@@ -60,6 +60,8 @@ public:
 	QString look(uint count);
 
 	Buffer copy();
+
+	QString get(uint start, uint stop);
 };
 
 #endif // BUFFER_H

@@ -24,6 +24,43 @@
 
 #include "decleration.h"
 
+#include "function.h"
+#include "error.h"
+
 Decleration::Decleration()
 {
+	//type = Token::Decleration;
+}
+
+Decleration *Decleration::parseDecleartion(SmartBuffer *b)
+{
+	while ( b->peek() == '#' ) // A tag
+	{
+		b->consumeWhitespace();
+	}
+
+	if ( b->peek() == '{' || b->look() == "[[" )
+	{
+		Function *f = Function::parseFunctionDecleration(b);
+		return f;
+	}
+	else if ( b->look(3) == "var" )
+	{
+		b->consumeWhitespace();
+
+		while ( true )
+		{
+			QString id = Symbol::parseIdentifier(b);
+			if ( id == "" ) Error::fatal("Expected identifier.", b);
+
+			b->consumeWhitespace();
+			if ( b->peek() != ',' )
+				break;
+
+			b->pop();
+			b->consumeWhitespace();
+		}
+	}
+
+	return NULL;
 }

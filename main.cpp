@@ -85,7 +85,13 @@ int main ( int argc, char **argv )
 	}
 	SmartBuffer b(&src);
 
-	Module *mod = Module::parse(&b);
+	if ( b.look(2) == "#!" )      // Skip the hashbang.
+		while ( b.pop() != '\n' ) //
+			;
+
+	Token::List tl = Token::tokenize(&b);
+	qDebug() << tl;
+	//Module *mod = Module::parse(&b);
 
 
 	cerr << "SUCCESS!" << endl;

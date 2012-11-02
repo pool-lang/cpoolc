@@ -317,3 +317,17 @@ Buffer Buffer::copy()
 {
 	return Buffer(*this);
 }
+
+QString Buffer::get(uint start, uint stop)
+{
+	return data.mid(start, stop-start);
+}
+#ifdef TEST
+TEST(Buffer, get)
+{
+	Buffer b("abcdefghijklmnopqrstuvwxyz");
+
+	EXPECT_EQ("abcdefg", b.get(0, 7));
+	EXPECT_EQ("cdefghij", b.get(2, 10));
+}
+#endif
