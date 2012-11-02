@@ -22,18 +22,29 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef STATEMENT_H
-#define STATEMENT_H
+#ifndef SCOPE_H
+#define SCOPE_H
 
-#include "scope.h"
-#include "smartbuffer.h"
+#include <QHash>
 
-class Statement
+class Scope;
+
+#include "symbol.h"
+
+class Scope
 {
-public:
-	Statement();
+	Scope *parent;
 
-	static Statement *parseStatement(SmartBuffer *b, Scope *Scope)
+	typedef QHash<QString, Symbol*> SymbolMap;
+	SymbolMap symbols;
+public:
+	Scope(Scope *parent);
+
+	Symbol *findSymbol(QString name);
+	Scope *newSymbol(Symbol *s);
+	Scope *setParent(Scope *p);
+
+	Scope *globalScope();
 };
 
-#endif // STATEMENT_H
+#endif // SCOPE_H

@@ -56,3 +56,9 @@ Scope *Scope::setParent(Scope *p)
 
 	return this;
 }
+
+Scope *Scope::globalScope()
+{
+	if ( parent == NULL ) return this;
+	else                  return parent->globalScope();
+}

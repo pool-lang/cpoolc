@@ -25,9 +25,11 @@
 #include "symbol.h"
 
 #include <QRegExp>
+#include <QHash>
 
 #include "test.h"
 #include "variable.h"
+#include "statement.h"
 
 Symbol::Symbol()
 {
@@ -45,6 +47,13 @@ QString Symbol::getID()
 
 Symbol *Symbol::parseDecleartion(SmartBuffer *b, Scope *s)
 {
+	QHash<QString, Statement> tags;
+	while ( b->pop() == "#" )
+	{
+		//QString name = parse
+	}
+	b->move(-1);
+
 	if ( b->read(3) == "var" )
 	{
 		Variable *v = Variable::parseVariableDeclearation(b);

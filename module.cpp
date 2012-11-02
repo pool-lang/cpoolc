@@ -51,6 +51,6 @@ Module *Module::parse(SmartBuffer *b)
 
 	while (true)
 	{
-		parseStatement();
+		Statement::parseStatement(b, s);
 	}
 }

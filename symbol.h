@@ -37,6 +37,7 @@ class Symbol
 {
 public:
 	enum Type {
+		Undefined,
 		Function,
 		Interface,
 		Value
@@ -44,6 +45,7 @@ public:
 
 private:
 	QString id;
+	bool defined;
 
 protected:
 	Type type;
@@ -56,6 +58,7 @@ public:
 
 	static Symbol *parseDecleartion(SmartBuffer *b, Scope *s);
 	static QString parseIdentifier(SmartBuffer *b);
+	static QString parseQualifiedIdentifier(SmartBuffer *b, Scope *s);
 };
 
 #endif // SYMBOL_H
