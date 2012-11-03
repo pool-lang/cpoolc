@@ -23,3 +23,30 @@
 *******************************************************************************/
 
 #include "tuple.h"
+
+
+Tuple::Tuple()
+{
+//	type = Token::Tuple;
+}
+
+Tuple *Tuple::parseTuple(SmartBuffer *b)
+{
+	Tuple *r = new Tuple();
+
+	uint begin = b->tell();
+	bool brackets = false;
+
+	if ( b->peek() == '(' )
+	{
+		b->pop();
+		brackets = true;
+	}
+
+	while (true)
+	{
+		b->consumeWhitespace();
+
+
+	}
+}

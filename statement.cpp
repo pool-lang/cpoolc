@@ -23,16 +23,23 @@
 *******************************************************************************/
 
 #include "statement.h"
+
+#include <QDebug>
+
 #include "symbol.h"
+#include "decleration.h"
 
 Statement::Statement()
 {
+//	type = Token::Statement;
 }
 
-Statement *Statement::parseStatement(SmartBuffer *b, Scope *scope)
+Statement *Statement::parseStatement(SmartBuffer *b)
 {
-	Symbol *s = Symbol::parseDecleartion(b, s);
-	if (s) return s;
+	Statement *r = new Statement();
 
-	return NULL;
+	::Decleration *d = ::Decleration::parseDecleartion(b);
+	qDebug() << d;
+
+	return d;
 }

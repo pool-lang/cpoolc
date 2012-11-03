@@ -24,22 +24,14 @@
 
 #include "value.h"
 
-Value::Value(Interface *type, Scope *parent):
-	type(type),
-	scope(parent)
+Value::Value(Interface *type):
+	type(type)
 {
 }
 
 Value *Value::setType(Value::ValueType t)
 {
 	currentType = t;
-
-	return this;
-}
-
-Value *Value::setScope(Scope *s)
-{
-	scope = s;
 
 	return this;
 }

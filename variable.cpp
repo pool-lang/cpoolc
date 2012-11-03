@@ -32,8 +32,19 @@ Variable::Variable()
 {
 }
 
+Variable::Variable(QString name)
+{
+	this->name = name;
+}
+
+QString Variable::getName()
+{
+	return name;
+}
+
 Variable *Variable::parseVariableDeclearation(SmartBuffer *b)
 {
+/*	while ( b->pop() == '#' ) // A tag
 	if ( b->read(3) != "var" ) return NULL;
 	b->consumeWhitespace();
 
@@ -44,5 +55,5 @@ Variable *Variable::parseVariableDeclearation(SmartBuffer *b)
 
 		QChar c = b->pop();
 
-	}
+	}*/
 }

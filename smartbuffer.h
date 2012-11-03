@@ -41,7 +41,7 @@ public:
 
 		bool eof;
 
-		Position(QString file = "", uint line = 0, uint col = 0);
+		Position(QString file = "", uint line = 0, uint col = 0, bool eof = false);
 		int operator ==(const Position &p) const;
 	};
 

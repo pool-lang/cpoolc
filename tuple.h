@@ -26,8 +26,20 @@
 #define TUPLE_H
 
 #include <QList>
-#include "value.h"
 
-typedef QList<Value*> Tuple;
+#include "value.h"
+#include "token.h"
+#include "statement.h"
+#include "smartbuffer.h"
+
+class Tuple : public Token
+{
+	QList< ::Statement*> values;
+
+public:
+	Tuple();
+
+	static Tuple *parseTuple(SmartBuffer *b);
+};
 
 #endif // TUPLE_H

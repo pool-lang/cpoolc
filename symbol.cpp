@@ -29,9 +29,9 @@
 
 #include "test.h"
 #include "variable.h"
-#include "statement.h"
 
-Symbol::Symbol()
+Symbol::Symbol():
+	type(Unknown)
 {
 }
 
@@ -43,23 +43,6 @@ Symbol::Type Symbol::getType()
 QString Symbol::getID()
 {
 	return id;
-}
-
-Symbol *Symbol::parseDecleartion(SmartBuffer *b, Scope *s)
-{
-	QHash<QString, Statement> tags;
-	while ( b->pop() == "#" )
-	{
-		//QString name = parse
-	}
-	b->move(-1);
-
-	if ( b->read(3) == "var" )
-	{
-		Variable *v = Variable::parseVariableDeclearation(b);
-		return NULL;
-	}
-	else return NULL;
 }
 
 QString Symbol::parseIdentifier(SmartBuffer *b)
@@ -96,23 +79,66 @@ QString Symbol::parseIdentifier(SmartBuffer *b)
 #ifdef TEST
 TEST(SmartBuffer, parseIdentifier)
 {
-	SmartBuffer b(Buffer("id _id 9not id943 I_d9s"));
+	SmartBuffer b(Buffer("id _id 9not id943 I_d9s I_d9s::another"));
 	//                    01234567890123456789012
 
 	EXPECT_EQ("id", Symbol::parseIdentifier(&b));
+	EXPECT_EQ(SmartBuffer::Position("", 1, 2), b.position());
 	b.consumeWhitespace();
 	EXPECT_EQ("_id", Symbol::parseIdentifier(&b));
+	EXPECT_EQ(SmartBuffer::Position("", 1, 6), b.position());
 	b.consumeWhitespace();
 	EXPECT_EQ("", Symbol::parseIdentifier(&b));
+	EXPECT_EQ(SmartBuffer::Position("", 1, 7), b.position());
 
 	b.seek(12);
 	EXPECT_EQ("id943", Symbol::parseIdentifier(&b));
 	b.consumeWhitespace();
 	EXPECT_EQ("I_d9s", Symbol::parseIdentifier(&b));
 	b.consumeWhitespace();
-	EXPECT_EQ("", Symbol::parseIdentifier(&b));
+	EXPECT_EQ("I_d9s", Symbol::parseIdentifier(&b));
+	b.move(2);
+	EXPECT_EQ("another", Symbol::parseIdentifier(&b));
 	b.consumeWhitespace();
 	EXPECT_EQ("", Symbol::parseIdentifier(&b));
 	b.consumeWhitespace();
+	EXPECT_EQ("", Symbol::parseIdentifier(&b));
+	b.consumeWhitespace();
+}
+#endif
+
+QString Symbol::parseQualifiedIdentifier(SmartBuffer *b)
+{
+	uint p = b->tell();
+	QString r = parseIdentifier(b);
+
+	if ( r == "" ) return r;
+
+	while ( b->read(2) == "::" )
+	{
+		QString c = parseIdentifier(b);
+		if ( c == "" )
+		{
+			b->seek(p); // Return to where we were.
+			return c;
+		}
+		r += "::" + c;
+	}
+
+	b->move(-2);
+
+	return r;
+}
+#ifdef TEST
+TEST(SmartBuffer, parseQualifiedIdentifier)
+{
+	SmartBuffer b(Buffer("mod::id a::b::c::d::e not::::id"));
+	//                    01234567890123456789012
+
+	EXPECT_EQ("mod::id", Symbol::parseQualifiedIdentifier(&b));
+	b.consumeWhitespace();
+	EXPECT_EQ("a::b::c::d::e", Symbol::parseQualifiedIdentifier(&b));
+	b.consumeWhitespace();
+	EXPECT_EQ("", Symbol::parseQualifiedIdentifier(&b));
 }
 #endif

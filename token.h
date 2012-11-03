@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,29 +22,38 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef SCOPE_H
-#define SCOPE_H
+#ifndef TOKEN_H
+#define TOKEN_H
 
-#include <QHash>
+#include <QString>
 
-class Scope;
+#include "smartbuffer.h"
 
-#include "symbol.h"
-
-class Scope
+class Token
 {
-	Scope *parent;
-
-	typedef QHash<QString, Symbol*> SymbolMap;
-	SymbolMap symbols;
 public:
-	Scope(Scope *parent);
+	enum Type {
+		Undefined,
+		Character,
+		String,
+		Identifier,
+		Operator,
+	};
 
-	Symbol *findSymbol(QString name);
-	Scope *newSymbol(Symbol *s);
-	Scope *setParent(Scope *p);
+	typedef QList<Token> List;
 
-	Scope *globalScope();
+	QString data;
+	SmartBuffer::Position defined;
+
+	Type type;
+
+public:
+	Token();
+	Token(Type type, QString data);
+
+	static Token::List tokenize(SmartBuffer *b);
 };
 
-#endif // SCOPE_H
+QDebug operator<<(QDebug dbg, const Token &t);
+
+#endif // TOKEN_H

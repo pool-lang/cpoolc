@@ -29,20 +29,26 @@
 
 class Scope;
 
-#include "symbol.h"
+#include "variable.h"
+#include "statement.h"
 
 class Scope
 {
 	Scope *parent;
 
-	typedef QHash<QString, Symbol*> SymbolMap;
+	typedef QHash<QString, Variable*> SymbolMap;
 	SymbolMap symbols;
-public:
-	Scope(Scope *parent);
 
-	Symbol *findSymbol(QString name);
-	Scope *newSymbol(Symbol *s);
+public:
+	QList<Statement> statements;
+
+	Scope();
+
+	Variable *findVariable(QString name);
+	Variable *newVariable(QString name);
 	Scope *setParent(Scope *p);
+
+	static Scope *parseScope(SmartBuffer *b);
 };
 
 #endif // SCOPE_H

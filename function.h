@@ -30,21 +30,23 @@
 #include "scope.h"
 #include "statement.h"
 #include "symbol.h"
+#include "decleration.h"
 
-class Function
+class Function : public Decleration
 {
-public:
-	Scope *scope;
-	QList<Statement> statements;
-	QList<Symbol*> arguments;
-	QList<Symbol*> returnValues;
-
 	bool isBlock;
 
-	Function();
+	enum FuncType {
+		Invalid,
+		Function_t,
+		Block
+	};
+	FuncType type;
 
-	Function *setIsBlock(bool b);
-	Function *setScope(Scope *s);
+public:
+	Function(bool isBlock = false);
+
+	static Function *parseFunctionDecleration(SmartBuffer *b);
 };
 
 #endif // FUNCTION_H

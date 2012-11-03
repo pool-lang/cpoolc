@@ -28,12 +28,11 @@
 #include <QString>
 #include <QHash>
 
-#include "symbol.h"
 #include "overloadset.h"
 
 class Variable;
 
-class Interface: public Symbol
+class Interface
 {
 	QString name;
 	QString binaryname;

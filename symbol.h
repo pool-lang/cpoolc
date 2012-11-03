@@ -32,12 +32,13 @@ class Symbol;
 
 #include "smartbuffer.h"
 #include "scope.h"
+#include "token.h"
 
 class Symbol
 {
 public:
 	enum Type {
-		Undefined,
+		Unknown,
 		Function,
 		Interface,
 		Value
@@ -56,9 +57,8 @@ public:
 	Type getType();
 	QString getID();
 
-	static Symbol *parseDecleartion(SmartBuffer *b, Scope *s);
 	static QString parseIdentifier(SmartBuffer *b);
-	static QString parseQualifiedIdentifier(SmartBuffer *b, Scope *s);
+	static QString parseQualifiedIdentifier(SmartBuffer *b);
 };
 
 #endif // SYMBOL_H

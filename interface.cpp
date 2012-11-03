@@ -26,7 +26,6 @@
 
 void Interface::init()
 {
-	type = Symbol::Interface;
 }
 
 Interface::Interface()

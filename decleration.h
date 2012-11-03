@@ -25,15 +25,21 @@
 #ifndef DECLERATION_H
 #define DECLERATION_H
 
+#include "QMap"
+
 #include "smartbuffer.h"
 #include "scope.h"
+#include "statement.h"
+#include "variable.h"
 
-class Decleration
+class Decleration : public Statement
 {
+	QList<Variable*> vars;
+
 public:
 	Decleration();
 
-
+	static Decleration *parseDecleartion(SmartBuffer *b);
 };
 
 #endif // DECLERATION_H

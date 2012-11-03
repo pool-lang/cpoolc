@@ -33,11 +33,11 @@ namespace Core
 {
 	Scope *createGlobalScope()
 	{
-		Scope *g = new Scope(NULL);
+		Scope *g = new Scope();
 
 		QString prefix = "core::";
 
-		g->newSymbol(new Integer(    "int",   0, true));
+		/*g->newSymbol(new Integer(    "int",   0, true));
 		g->newSymbol(new Integer(   "uint",   0, false));
 
 		g->newSymbol(new Integer(   "int8",   8, true));
@@ -49,7 +49,7 @@ namespace Core
 		g->newSymbol(new Integer(  "int64",  64, true));
 		g->newSymbol(new Integer( "uint64",  64, false));
 		g->newSymbol(new Integer( "int128", 128, true));
-		g->newSymbol(new Integer("uint128", 128, false));
+		g->newSymbol(new Integer("uint128", 128, false));*/
 
 		return g;
 	}

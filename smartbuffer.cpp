@@ -36,16 +36,18 @@ SmartBuffer::SmartBuffer(Buffer b, QString file):
 
 SmartBuffer::SmartBuffer(QFile *file):
 	Buffer(file->readAll()),
+	posindex(this->length()),
 	fname(file->fileName())
 {
+	init();
 }
 
 
-SmartBuffer::Position::Position(QString file, uint line, uint col):
+SmartBuffer::Position::Position(QString file, uint line, uint col, bool eof):
 	file(file),
 	line(line),
 	column(col),
-	eof(false)
+	eof(eof)
 {
 }
 
@@ -63,7 +65,7 @@ void SmartBuffer::init()
 	uint prev = tell();
 	seek(0);
 
-	Position p(fname, 0,0);
+	Position p(fname, 1,0);
 	for ( uint i = 0; i < length(); i++ )
 	{
 		posindex[i] = p;
@@ -95,22 +97,26 @@ TEST(SmartBuffer, position)
 	//                    0123456789012345678 // Index
 
 	EXPECT_EQ('a', b.peek());
-	EXPECT_EQ(SmartBuffer::Position("test", 0,0), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test", 1,0), b.position());
 	b.seek(1);
 	EXPECT_EQ(' ', b.peek());
-	EXPECT_EQ(SmartBuffer::Position("test",0,1), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",1,1), b.position());
 	b.seek(7);
 	EXPECT_EQ('g', b.peek());
-	EXPECT_EQ(SmartBuffer::Position("test",0,7), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",1,7), b.position());
 	b.seek(8);
 	EXPECT_EQ('\n', b.peek());
-	EXPECT_EQ(SmartBuffer::Position("test",0,8), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",1,8), b.position());
 	b.seek(9);
 	EXPECT_EQ('t', b.peek());
-	EXPECT_EQ(SmartBuffer::Position("test",1,0), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",2,0), b.position());
 	b.seek(10);
 	EXPECT_EQ('w', b.peek());
-	EXPECT_EQ(SmartBuffer::Position("test",1,1), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",2,1), b.position());
+	b.seek(b.length());
+	EXPECT_EQ(-1, b.peek());
+	EXPECT_EQ(SmartBuffer::Position("test",2,9), b.position());
+	EXPECT_EQ(SmartBuffer::Position("test",2,9,true), b.position());
 }
 #endif
 
