@@ -50,10 +50,7 @@ QString Symbol::parseIdentifier(SmartBuffer *b)
 	QString id;
 
 	QChar c = b->peek();
-	if (( c >= 'a' && c <= 'z' ) ||
-		( c >= 'A' && c <= 'Z' ) ||
-		( c == '_' )
-	   )
+	if (isIdentifierStartCharacter(c))
 	{
 		id.append(c);
 		b->move(1);
@@ -64,11 +61,7 @@ QString Symbol::parseIdentifier(SmartBuffer *b)
 	{
 		c = b->peek();
 
-		if (( c >= 'a' && c <= 'z' ) ||
-			( c >= 'A' && c <= 'Z' ) ||
-			( c >= '0' && c <= '9' ) ||
-			( c == '_' )
-		   )
+		if (isIdentifierCharacter(c))
 		{
 			id.append(c);
 			b->move(1);
@@ -141,4 +134,19 @@ TEST(SmartBuffer, parseQualifiedIdentifier)
 	b.consumeWhitespace();
 	EXPECT_EQ("", Symbol::parseQualifiedIdentifier(&b));
 }
+
+
+bool Symbol::isIdentifierCharacter(QChar c)
+{
+	return isIdentifierStartCharacter(c) ||
+		   ( c >= '0' && c <= '9' );
+}
+
+bool Symbol::isIdentifierStartCharacter(QChar c)
+{
+	return ( c >= 'a' && c <= 'z' ) ||
+		   ( c >= 'A' && c <= 'Z' ) ||
+		   ( c == '_' );
+}
+
 #endif

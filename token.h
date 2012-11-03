@@ -36,6 +36,7 @@ public:
 		Undefined,
 		Character,
 		String,
+		Number,
 		Identifier,
 		Operator,
 	};

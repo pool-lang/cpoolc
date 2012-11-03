@@ -44,6 +44,8 @@ public:
 
 	Scope();
 
+	Scope *globalScope();
+
 	Variable *findVariable(QString name);
 	Variable *newVariable(QString name);
 	Scope *setParent(Scope *p);

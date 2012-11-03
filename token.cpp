@@ -42,7 +42,7 @@ static QChar parseEscape (SmartBuffer *b)
 			b->pop();
 
 			bool ok;
-			b->read(1).toInt(&ok, 16); // Check if next character is hex.
+			b->look(1).toInt(&ok, 16); // Check if next character is hex.
 			if (!ok) // Is a null character.
 				return '\0';
 
@@ -74,6 +74,66 @@ static QChar parseEscape (SmartBuffer *b)
 	}
 }
 
+static QString parseNumber(SmartBuffer *b)
+{
+	uint base = 10;
+
+	if ( b->peek() == '0' )
+	{
+		b->pop();
+		switch (b->pop().toAscii())
+		{
+		case 'b':
+			base = 2;
+			break;
+		case 'o':
+			base = 8;
+			break;
+		case 'x':
+			base = 16;
+			break;
+		default:
+			b->move(-2);
+		}
+	}
+
+	uint p = b->tell();
+
+	switch (base)
+	{
+	case 2:
+		while ( b->peek() == '0' || b->peek() == '1' )
+			b->pop();
+		break;
+	case 8:
+		while ( b->peek() >= '0' && b->peek() <= '7' )
+			b->pop();
+		break;
+	case 10:
+		while ( b->peek() >= '0' && b->peek() <= '9' )
+			b->pop();
+		break;
+	case 16:
+		while (( b->peek() >= '0' && b->peek() <= '9' ) ||
+			   ( b->peek() >= 'A' && b->peek() <= 'F' ) ||
+			   ( b->peek() >= 'a' && b->peek() <= 'f' ))
+			b->pop();
+		break;
+	default:
+		Error::fatal(QString("Bug in code! Bad base.  Look at %0:%1")
+					 .arg(__FILE__).arg(__LINE__), b);
+	}
+
+	uint d = b->tell() - p;
+	b->seek(p);
+	QString r = b->read(d);
+
+	if (Symbol::isIdentifierStartCharacter(b->peek()))
+		Error::fatal("Unexpected identifier character.", b);
+
+	return r;
+}
+
 Token::List Token::tokenize(SmartBuffer *b)
 {
 	List l;
@@ -103,7 +163,9 @@ Token::List Token::tokenize(SmartBuffer *b)
 			if ( b->look(3) == "\"\"\"" )
 			{
 				b->move(3);
-				t.data = b->read(b->look().indexOf("\"\"\""));
+				int i = b->look().indexOf("\"\"\"");
+				if ( i < 0 ) Error::fatal("Expected end of raw string.", b);
+				t.data = b->read(i);
 				b->move(3);
 			}
 			else
@@ -182,6 +244,19 @@ Token::List Token::tokenize(SmartBuffer *b)
 			t.type = Identifier;
 			t.data = Symbol::parseIdentifier(b);
 			break;
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			t.type = Number;
+			t.data = parseNumber(b);
+			break;
 		default:
 			Error::fatal("Invalid character.", b);
 		}
@@ -253,10 +328,14 @@ QDebug operator<<(QDebug dbg, const Token &t)
 	switch (t.type)
 	{
 	case Token::Character:
-		dbg.nospace() << "<C " << t.data << ">";
+		//dbg.nospace() << "<C " << t.data << ">";
+		dbg.nospace() << "<C " << QString("%0").arg(t.data.at(0).unicode(),1,16) << ">";
 		break;
 	case Token::String:
 		dbg.nospace() << "<S " << t.data << ">";
+		break;
+	case Token::Number:
+		dbg.nospace() << "<N " << t.data << ">";
 		break;
 	case Token::Identifier:
 		dbg.nospace() << "<I " << t.data << ">";

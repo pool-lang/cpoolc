@@ -57,6 +57,8 @@ public:
 	Type getType();
 	QString getID();
 
+	static bool isIdentifierCharacter(QChar c);
+	static bool isIdentifierStartCharacter(QChar c);
 	static QString parseIdentifier(SmartBuffer *b);
 	static QString parseQualifiedIdentifier(SmartBuffer *b);
 };
