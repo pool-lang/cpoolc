@@ -29,20 +29,18 @@
 
 namespace Error
 {
-	void reportMessage ( QString msg, SmartBuffer *buf)
+	void reportMessage ( QString msg)
 	{
-		if ( buf )
-		{
-			SmartBuffer::Position p = buf->position();
-			std::cerr << QString("%1:%2:%3: ").arg(p.file).arg(p.line).arg(p.column).toStdString();
-		}
-
 		std::cerr << "Error: " << msg.toStdString() << std::endl;
+	}
+	void reportMessage ( QString msg, SmartBuffer::Position p)
+	{
+		std::cerr << QString("%1:%2:%3: ").arg(p.file).arg(p.line).arg(p.column).toStdString();
 	}
 
 	void fatal ( QString msg, SmartBuffer *buf)
 	{
-		reportMessage(msg, buf);
+		reportMessage(msg, buf->position());
 		exit(1);
 	}
 }

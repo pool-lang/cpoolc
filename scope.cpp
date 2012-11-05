@@ -69,17 +69,4 @@ Scope *Scope::globalScope()
 
 Scope *Scope::parseScope(SmartBuffer *b)
 {
-	Scope *r = new Scope();
-
-	while (true)
-	{
-		b->consumeWhitespace();
-		Statement *s = Statement::parseStatement(b);
-
-		if ( s == NULL ) break;
-
-		r->statements.append(*s);
-	}
-
-	return r;
 }

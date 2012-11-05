@@ -74,28 +74,32 @@ static QChar parseEscape (SmartBuffer *b)
 	}
 }
 
-static QString parseNumber(SmartBuffer *b)
+static QString parseNumber(SmartBuffer *b, uint forceBase = 0)
 {
 	uint base = 10;
 
-	if ( b->peek() == '0' )
+	if (!forceBase)
 	{
-		b->pop();
-		switch (b->pop().toAscii())
+		if ( b->peek() == '0' )
 		{
-		case 'b':
-			base = 2;
-			break;
-		case 'o':
-			base = 8;
-			break;
-		case 'x':
-			base = 16;
-			break;
-		default:
-			b->move(-2);
+			b->pop();
+			switch (b->pop().toAscii())
+			{
+			case 'b':
+				base = 2;
+				break;
+			case 'o':
+				base = 8;
+				break;
+			case 'x':
+				base = 16;
+				break;
+			default:
+				b->move(-2);
+			}
 		}
 	}
+	else base = forceBase;
 
 	uint p = b->tell();
 
@@ -127,6 +131,17 @@ static QString parseNumber(SmartBuffer *b)
 	uint d = b->tell() - p;
 	b->seek(p);
 	QString r = b->read(d);
+	if ( base != 10 ) // Make it base 10.
+		r = QString("%0").arg(r.toInt(NULL, base));
+
+	if ( b->pop() == '.' && b->peek().isDigit() )
+	{
+		if ( base != 10 )
+			Error::fatal("Floating points can only be specified in base 10.", b);
+
+		r += "." + parseNumber(b, base);
+	}
+	else b->move(-1); // For the pop in the if.
 
 	if (Symbol::isIdentifierStartCharacter(b->peek()))
 		Error::fatal("Unexpected identifier character.", b);

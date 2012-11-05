@@ -31,7 +31,8 @@
 
 namespace Error
 {
-	void reportMessage ( QString msg, SmartBuffer *buf = NULL);
+	void reportMessage (QString msg);
+	void reportMessage (QString msg, SmartBuffer::Position buf);
 	void fatal ( QString msg, SmartBuffer *buf = NULL);
 }
 

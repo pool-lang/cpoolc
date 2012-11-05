@@ -22,37 +22,29 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "statement.h"
+#ifndef ASTIDENTIFIER_H
+#define ASTIDENTIFIER_H
 
-#include <QDebug>
+#include <QString>
 
-#include "symbol.h"
-#include "decleration.h"
+#include "astelement.h"
+#include "token.h"
 
-Statement::Statement()
+class ASTIdentifier : public ASTElement
 {
-//	type = Token::Statement;
-}
+	SmartBuffer::Position pos;
+	QString data;
 
-Statement Statement::parseStatement(Token::List l)
-{
-	Statement r;
-	Statement *c = &r;
+public:
+	ASTIdentifier();
+	ASTIdentifier(SmartBuffer::Position pos);
 
-	for ( int i = 0; i < l.length(); i++ )
-	{
-		switch (l[i].type)
-		{
-		case Token::Identifier:
-			break;
-		case Token::Operator:
-			break;
-		case Token::Number:
-		case Token::String:
-		case Token::Character:
+	virtual Type getType();
+	virtual SmartBuffer::Position definedAt();
 
-			break;
+	virtual QString getIdentifier();
 
-		}
-	}
-}
+	static ASTIdentifier *fromAST(Token::List::iterator *tli);
+};
+
+#endif // ASTIDENTIFIER_H

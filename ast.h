@@ -22,37 +22,18 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "statement.h"
+#ifndef AST_H
+#define AST_H
 
-#include <QDebug>
+#include <QList>
 
-#include "symbol.h"
-#include "decleration.h"
+#include "smartbuffer.h"
 
-Statement::Statement()
-{
-//	type = Token::Statement;
-}
+class AST
+{	
+public:
 
-Statement Statement::parseStatement(Token::List l)
-{
-	Statement r;
-	Statement *c = &r;
+	AST();
+};
 
-	for ( int i = 0; i < l.length(); i++ )
-	{
-		switch (l[i].type)
-		{
-		case Token::Identifier:
-			break;
-		case Token::Operator:
-			break;
-		case Token::Number:
-		case Token::String:
-		case Token::Character:
-
-			break;
-
-		}
-	}
-}
+#endif // AST_H

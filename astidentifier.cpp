@@ -22,37 +22,74 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "statement.h"
+#include "astidentifier.h"
 
-#include <QDebug>
+#include <stdlib.h>
 
-#include "symbol.h"
-#include "decleration.h"
+#include "error.h"
 
-Statement::Statement()
+ASTIdentifier::ASTIdentifier()
 {
-//	type = Token::Statement;
 }
 
-Statement Statement::parseStatement(Token::List l)
+ASTIdentifier::ASTIdentifier(SmartBuffer::Position pos):
+	pos(pos)
 {
-	Statement r;
-	Statement *c = &r;
+}
 
-	for ( int i = 0; i < l.length(); i++ )
+ASTElement::Type ASTIdentifier::getType()
+{
+	return Identifier;
+}
+
+SmartBuffer::Position ASTIdentifier::definedAt()
+{
+	return pos;
+}
+
+QString ASTIdentifier::getIdentifier()
+{
+	return data;
+}
+
+ASTIdentifier *ASTIdentifier::fromAST(Token::List::iterator *tli)
+{
+	Token::List::iterator i = *tli;
+	ASTIdentifier r((*i).defined);
+
+	if ( (*i).type == Token::Operator && (*i).data == ":" )
 	{
-		switch (l[i].type)
+		i++;
+		if ( (*i).type == Token::Operator && (*i).data == ":" )
 		{
-		case Token::Identifier:
-			break;
-		case Token::Operator:
-			break;
-		case Token::Number:
-		case Token::String:
-		case Token::Character:
-
-			break;
-
+			r.data = "::";
+			i++;
 		}
+		else return NULL;
 	}
+
+	if ( (*i).type != Token::Identifier ) return NULL;
+
+	r.data += (*i).data;
+	i++;
+
+	while ( (*i).type == Token::Operator && (*i).data == ":" )
+	{
+		i++;
+		if ( (*i).type == Token::Operator && (*i).data == ":" )
+		{
+			r.data = "::";
+			i++;
+		}
+		else
+		{
+			i--;
+			break;
+		}
+
+		if ( (*i).type != Token::Identifier ) Error::fatal("Trailing ::.");
+	}
+
+	*tli = i;
+	return new ASTIdentifier(r);
 }

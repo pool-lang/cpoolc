@@ -22,37 +22,5 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "statement.h"
+#include "astelement.h"
 
-#include <QDebug>
-
-#include "symbol.h"
-#include "decleration.h"
-
-Statement::Statement()
-{
-//	type = Token::Statement;
-}
-
-Statement Statement::parseStatement(Token::List l)
-{
-	Statement r;
-	Statement *c = &r;
-
-	for ( int i = 0; i < l.length(); i++ )
-	{
-		switch (l[i].type)
-		{
-		case Token::Identifier:
-			break;
-		case Token::Operator:
-			break;
-		case Token::Number:
-		case Token::String:
-		case Token::Character:
-
-			break;
-
-		}
-	}
-}

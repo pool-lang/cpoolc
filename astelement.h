@@ -22,37 +22,24 @@
 *                                                                              *
 *******************************************************************************/
 
-#include "statement.h"
+#ifndef ASTELEMENT_H
+#define ASTELEMENT_H
 
-#include <QDebug>
+#include "smartbuffer.h"
 
-#include "symbol.h"
-#include "decleration.h"
-
-Statement::Statement()
+class ASTElement
 {
-//	type = Token::Statement;
-}
+public:
+	enum Type {
+		None,
+		Keyword,
+		Literal,
+		Identifier,
+		Operator,
+	};
 
-Statement Statement::parseStatement(Token::List l)
-{
-	Statement r;
-	Statement *c = &r;
+	virtual SmartBuffer::Position definedAt() = 0;
+	virtual Type getType() = 0;
+};
 
-	for ( int i = 0; i < l.length(); i++ )
-	{
-		switch (l[i].type)
-		{
-		case Token::Identifier:
-			break;
-		case Token::Operator:
-			break;
-		case Token::Number:
-		case Token::String:
-		case Token::Character:
-
-			break;
-
-		}
-	}
-}
+#endif // ASTELEMENT_H
