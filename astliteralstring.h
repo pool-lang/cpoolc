@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,29 +22,23 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef ASTIDENTIFIER_H
-#define ASTIDENTIFIER_H
+#ifndef ASTLITERALSTRING_H
+#define ASTLITERALSTRING_H
 
-#include <QString>
+#include "astliteral.h"
+#include "smartbuffer.h"
 
-#include "astelement.h"
-#include "token.h"
-
-class ASTIdentifier : public ASTElement
+class ASTLiteralString: public ASTLiteral
 {
-	SmartBuffer::Position pos;
 	QString data;
 
 public:
-	ASTIdentifier();
-	ASTIdentifier(SmartBuffer::Position pos);
+	ASTLiteralString();
+	ASTLiteralString(QString d, SmartBuffer::Position pos = SmartBuffer::Position());
 
-	virtual Type getType();
-	virtual SmartBuffer::Position definedAt();
+	QString getData();
 
-	virtual QString getIdentifier();
-
-	static ASTIdentifier *fromTokens(Token::List *tl, Token::List::iterator *tli);
+	static ASTLiteralString *fromTokens(Token::List *tl, Token::List::iterator *tli);
 };
 
-#endif // ASTIDENTIFIER_H
+#endif // ASTLITERALSTRING_H

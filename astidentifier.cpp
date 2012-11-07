@@ -27,6 +27,7 @@
 #include <stdlib.h>
 
 #include "error.h"
+#include "test.h"
 
 ASTIdentifier::ASTIdentifier()
 {
@@ -52,14 +53,19 @@ QString ASTIdentifier::getIdentifier()
 	return data;
 }
 
-ASTIdentifier *ASTIdentifier::fromAST(Token::List::iterator *tli)
+ASTIdentifier *ASTIdentifier::fromTokens(Token::List *tl,
+                                         Token::List::iterator *tli)
 {
 	Token::List::iterator i = *tli;
 	ASTIdentifier r((*i).defined);
 
+	if ( i == tl->end() ) return NULL;
+
 	if ( (*i).type == Token::Operator && (*i).data == ":" )
 	{
 		i++;
+		if ( i == tl->end() ) return NULL;
+
 		if ( (*i).type == Token::Operator && (*i).data == ":" )
 		{
 			r.data = "::";
@@ -68,28 +74,94 @@ ASTIdentifier *ASTIdentifier::fromAST(Token::List::iterator *tli)
 		else return NULL;
 	}
 
+	if ( i == tl->end() ) return NULL;
 	if ( (*i).type != Token::Identifier ) return NULL;
 
 	r.data += (*i).data;
 	i++;
 
-	while ( (*i).type == Token::Operator && (*i).data == ":" )
+	if ( i != tl->end() )
 	{
-		i++;
-		if ( (*i).type == Token::Operator && (*i).data == ":" )
+		while ( (*i).type == Token::Operator && (*i).data == ":" )
 		{
-			r.data = "::";
 			i++;
-		}
-		else
-		{
-			i--;
-			break;
-		}
+			if ( i == tl->end() ) return NULL;
 
-		if ( (*i).type != Token::Identifier ) Error::fatal("Trailing ::.");
+			if ( (*i).type == Token::Operator && (*i).data == ":" )
+			{
+				r.data += "::";
+				i++;
+				if ( i == tl->end() ) return NULL;
+			}
+			else
+			{
+				i--;
+				break;
+			}
+
+			if ( (*i).type != Token::Identifier ) Error::fatal("Trailing ::.");
+			r.data += (*i).data;
+
+			i++;
+			if ( i == tl->end() ) break;
+		}
 	}
 
 	*tli = i;
 	return new ASTIdentifier(r);
 }
+#ifdef TEST
+static Token::List strToList_(QString s, int l)
+{
+	SmartBuffer b(Buffer(s), QString("input%1").arg(l));
+	return Token::tokenize(&b);
+}
+
+#define strToList(s) strToList_(s, __LINE__)
+TEST(ASTIdentifier, fromAST)
+{
+	Token::List l;
+	Token::List::iterator li;
+	ASTIdentifier *id;
+
+	l = strToList("identifier");
+	li = l.begin();
+	id = ASTIdentifier::fromTokens(&l, &li);
+	ASSERT_TRUE(id);
+	EXPECT_EQ("identifier", id->getIdentifier());
+	EXPECT_EQ(l.end(), li);
+	free(id);
+
+	l = strToList("::modid");
+	li = l.begin();
+	id = ASTIdentifier::fromTokens(&l, &li);
+	ASSERT_TRUE(id);
+	EXPECT_EQ("::modid", id->getIdentifier());
+	EXPECT_EQ(l.end(), li);
+	free(id);
+
+	l = strToList("core::compiler");
+	li = l.begin();
+	id = ASTIdentifier::fromTokens(&l, &li);
+	ASSERT_TRUE(id);
+	EXPECT_EQ("core::compiler", id->getIdentifier());
+	EXPECT_EQ(l.end(), li);
+	free(id);
+
+	l = strToList("this::is::an::error::");
+	li = l.begin();
+	id = ASTIdentifier::fromTokens(&l, &li);
+	ASSERT_FALSE(id);
+	EXPECT_EQ(l.begin(), li);
+	free(id);
+
+	l = strToList("an::id next::id");
+	li = l.begin();
+	id = ASTIdentifier::fromTokens(&l, &li);
+	ASSERT_TRUE(id);
+	EXPECT_EQ("an::id", id->getIdentifier());
+	EXPECT_EQ(l.begin()+4, li);
+	free(id);
+}
+
+#endif

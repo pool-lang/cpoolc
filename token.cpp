@@ -283,7 +283,7 @@ Token::List Token::tokenize(SmartBuffer *b)
 	return l;
 }
 #ifdef TEST
-Token::List strToList_(QString s, int l)
+static Token::List strToList_(QString s, int l)
 {
 	SmartBuffer b(Buffer(s), QString("input%1").arg(l));
 	return Token::tokenize(&b);
