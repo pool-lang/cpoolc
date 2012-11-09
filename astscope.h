@@ -27,9 +27,19 @@
 
 #include "astelement.h"
 
+#include "ast.h"
+
 class ASTScope: public ASTElement
 {
 public:
+	enum Type {
+		Unknown,
+		Block,
+		Function,
+	};
+
+	AST::List elements;
+
 	ASTScope();
 
 

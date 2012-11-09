@@ -201,22 +201,63 @@ Token::List Token::tokenize(SmartBuffer *b)
 			break;
 		case '~':
 		case '!':
+			if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '@':
 		case '#':
 		case '$':
 		case '%':
 		case '^':
 		case '&':
+			if ( b->peek() == '&' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '*':
 		case '(':
 		case ')':
 		case '-':
-		case '_':
 		case '=':
+			if ( b->look(2) == "==" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(3));
+				break;
+			}
+			else if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '+':
+			if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '[':
+			if ( b->peek() == '[' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '{':
 		case ']':
+			if ( b->peek() == ']' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '}':
 		case ';':
 		case ':':
