@@ -27,6 +27,8 @@
 
 #include "astelement.h"
 
+#include "token.h"
+
 class ASTLiteral: public ASTElement
 {
 public:
@@ -50,7 +52,11 @@ public:
 
 	virtual ASTElement::Type getType();
 	virtual SmartBuffer::Position definedAt();
-	virtual Type getLiteralType() = 0;
+	virtual Type getLiteralType();
+	virtual QString prettyType() const;
+
+
+	static ASTLiteral *fromTokens(Token::List *tl, Token::List::iterator *tli);
 };
 
 #endif // ASTLITERAL_H

@@ -36,6 +36,8 @@ public:
 	ASTLiteralString();
 	ASTLiteralString(QString d, SmartBuffer::Position pos = SmartBuffer::Position());
 
+	virtual QString prettyType() const;
+
 	QString getData();
 
 	static ASTLiteralString *fromTokens(Token::List *tl, Token::List::iterator *tli);

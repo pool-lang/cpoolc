@@ -36,6 +36,11 @@ ASTLiteralString::ASTLiteralString(QString d, SmartBuffer::Position pos):
 	setLiteralType(String);
 }
 
+QString ASTLiteralString::prettyType() const
+{
+	return QString("<ASTE LString %0>").arg(data);
+}
+
 QString ASTLiteralString::getData()
 {
 	return data;
@@ -44,9 +49,11 @@ QString ASTLiteralString::getData()
 ASTLiteralString *ASTLiteralString::fromTokens(Token::List *tl,
                                                Token::List::iterator *tli)
 {
-	if ( (*tli).type == Token::String )
+	if ( (**tli).type == Token::String )
 	{
-		return new ASTLiteralString((*tli++).data, (*tli).defined);
+		ASTLiteralString *r = new ASTLiteralString((**tli).data, (**tli).defined);
+		(*tli)++;
+		return r;
 	}
 
 	return NULL;

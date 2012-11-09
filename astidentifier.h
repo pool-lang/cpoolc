@@ -41,6 +41,7 @@ public:
 
 	virtual Type getType();
 	virtual SmartBuffer::Position definedAt();
+	virtual QString prettyType() const;
 
 	virtual QString getIdentifier();
 

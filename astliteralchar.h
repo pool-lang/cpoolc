@@ -36,6 +36,7 @@ public:
 	ASTLiteralChar(QChar d, SmartBuffer::Position pos = SmartBuffer::Position());
 
 	QChar getData();
+	virtual QString prettyType() const;
 
 	static ASTLiteralChar *fromTokens(Token::List *tl, Token::List::iterator *tli);
 };

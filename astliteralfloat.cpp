@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,23 +22,43 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef AST_H
-#define AST_H
+#include "astliteralfloat.h"
 
-#include <QList>
-
-#include "smartbuffer.h"
-#include "token.h"
-#include "astelement.h"
-
-class AST
+ASTLiteralFloat::ASTLiteralFloat()
 {
-public:
-	typedef QList<ASTElement*> List;
+	setLiteralType(Float);
+}
 
-	AST();
+ASTLiteralFloat::ASTLiteralFloat(double d, SmartBuffer::Position pos):
+	data(d)
+{
+	setPos(pos);
+	setLiteralType(Float);
+}
 
-	static List parse(Token::List tl);
-};
+QString ASTLiteralFloat::prettyType() const
+{
+	return QString("<ASTE LFloat %0>").arg(data);
+}
 
-#endif // AST_H
+double ASTLiteralFloat::getData()
+{
+	return data;
+}
+
+ASTLiteralFloat *ASTLiteralFloat::fromTokens(Token::List *tl,
+                                             Token::List::iterator *tli)
+{
+	if ( (**tli).type == Token::Number )
+	{
+		bool ok;
+		ASTLiteralFloat *r = new ASTLiteralFloat((**tli).data.toDouble(&ok), (**tli).defined);
+		if (ok)
+		{
+			(*tli)++;
+			return r;
+		}
+	}
+
+	return NULL;
+}

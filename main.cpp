@@ -35,6 +35,7 @@
 #include "function.h"
 #include "core.h"
 #include "smartbuffer.h"
+#include "ast.h"
 
 using namespace std;
 
@@ -48,6 +49,10 @@ void usage ( QxtCommandOptions *opt )
 
 int main ( int argc, char **argv )
 {
+	 QLocale::setDefault(QLocale::C); // This isn't a UI, we want things to be
+	                                  // consistant across compiles, environment
+	                                  // independant.
+
 	QxtCommandOptions opt;
 	opt.add("output", "Where to write the output file to.", QxtCommandOptions::Required);
 	opt.alias("output", "o");
@@ -90,9 +95,11 @@ int main ( int argc, char **argv )
 			;
 
 	Token::List tl = Token::tokenize(&b);
-	qDebug() << tl;
-	//Module *mod = Module::parse(&b);
+	//qDebug() << tl;
+	AST::List ast = AST::parse(tl);
+	qDebug() << ast;
 
+	//Module *mod = Module::parse(&b);
 
 	cerr << "SUCCESS!" << endl;
 

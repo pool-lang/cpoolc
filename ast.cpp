@@ -27,3 +27,18 @@
 AST::AST()
 {
 }
+
+AST::List AST::parse(Token::List tl)
+{
+	Token::List::iterator i = tl.begin();
+
+	List eles; // Start anew.
+
+	ASTElement *e = NULL;
+	while ( i != tl.end() && ( e = ASTElement::fromTokens(&tl, &i) ) )
+	{
+		eles.append(e);
+	}
+
+	return eles;
+}

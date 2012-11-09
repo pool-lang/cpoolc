@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,23 +22,17 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef AST_H
-#define AST_H
+#ifndef ASTSCOPE_H
+#define ASTSCOPE_H
 
-#include <QList>
-
-#include "smartbuffer.h"
-#include "token.h"
 #include "astelement.h"
 
-class AST
+class ASTScope: public ASTElement
 {
 public:
-	typedef QList<ASTElement*> List;
+	ASTScope();
 
-	AST();
 
-	static List parse(Token::List tl);
 };
 
-#endif // AST_H
+#endif // ASTSCOPE_H

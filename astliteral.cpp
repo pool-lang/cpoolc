@@ -24,13 +24,18 @@
 
 #include "astliteral.h"
 
+#include "astliteralchar.h"
+#include "astliteralstring.h"
+#include "astliteralint.h"
+#include "astliteralfloat.h"
+
 ASTLiteral::ASTLiteral()
 {
 }
 
 void ASTLiteral::setLiteralType(ASTLiteral::Type t)
 {
-
+	this->type = t;
 }
 
 void ASTLiteral::setPos(SmartBuffer::Position pos)
@@ -46,4 +51,33 @@ ASTElement::Type ASTLiteral::getType()
 SmartBuffer::Position ASTLiteral::definedAt()
 {
 	return pos;
+}
+
+ASTLiteral::Type ASTLiteral::getLiteralType()
+{
+	return type;
+}
+
+QString ASTLiteral::prettyType() const
+{
+	return "<ASTE Literal>";
+}
+
+ASTLiteral *ASTLiteral::fromTokens(Token::List *tl, Token::List::iterator *tli)
+{
+	ASTLiteral *r = NULL;
+
+	r = ASTLiteralChar::fromTokens(tl, tli);
+	if ( r != NULL ) return r;
+
+	r = ASTLiteralString::fromTokens(tl, tli);
+	if ( r != NULL ) return r;
+
+	r = ASTLiteralInt::fromTokens(tl, tli);
+	if ( r != NULL ) return r;
+
+	r = ASTLiteralFloat::fromTokens(tl, tli);
+	if ( r != NULL ) return r;
+
+	return NULL;
 }

@@ -41,10 +41,17 @@ QChar ASTLiteralChar::getData()
 	return data;
 }
 
+QString ASTLiteralChar::prettyType() const
+{
+	return QString("<ASTE LChar %0>").arg(data);
+}
+
 ASTLiteralChar *ASTLiteralChar::fromTokens(Token::List *tl, Token::List::iterator *tli)
 {
-	if ( (*tli).type == Token::Char )
+	if ( (**tli).type == Token::Character )
 	{
-		return new ASTLiteralChar((*tli++).data[0], (*tli).defined);
+		ASTLiteralChar *r = new ASTLiteralChar((**tli).data[0], (**tli).defined);
+		(*tli)++;
+		return r;
 	}
 }

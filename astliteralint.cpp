@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,23 +22,43 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef AST_H
-#define AST_H
+#include "astliteralint.h"
 
-#include <QList>
-
-#include "smartbuffer.h"
-#include "token.h"
-#include "astelement.h"
-
-class AST
+ASTLiteralInt::ASTLiteralInt()
 {
-public:
-	typedef QList<ASTElement*> List;
+	setLiteralType(Interger);
+}
 
-	AST();
+ASTLiteralInt::ASTLiteralInt(long i, SmartBuffer::Position pos):
+	data(i)
+{
+	setPos(pos);
+	setLiteralType(Interger);
+}
 
-	static List parse(Token::List tl);
-};
+QString ASTLiteralInt::prettyType() const
+{
+	return QString("<ASTE LInt %0>").arg(data);
+}
 
-#endif // AST_H
+double ASTLiteralInt::getData()
+{
+	return data;
+}
+
+ASTLiteralInt *ASTLiteralInt::fromTokens(Token::List *tl,
+                                         Token::List::iterator *tli)
+{
+	if ( (**tli).type == Token::Number )
+	{
+		bool ok;
+		ASTLiteralInt *r = new ASTLiteralInt((**tli).data.toInt(&ok), (**tli).defined);
+		if (ok)
+		{
+			(*tli)++;
+			return r;
+		}
+	}
+
+	return NULL;
+}

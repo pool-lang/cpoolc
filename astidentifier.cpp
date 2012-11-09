@@ -48,6 +48,11 @@ SmartBuffer::Position ASTIdentifier::definedAt()
 	return pos;
 }
 
+QString ASTIdentifier::prettyType() const
+{
+	return QString("<ASTE Identifier %0>").arg(data);
+}
+
 QString ASTIdentifier::getIdentifier()
 {
 	return data;

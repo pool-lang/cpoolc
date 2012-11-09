@@ -26,6 +26,7 @@
 #define ASTELEMENT_H
 
 #include "smartbuffer.h"
+#include "token.h"
 
 class ASTElement
 {
@@ -40,6 +41,12 @@ public:
 
 	virtual SmartBuffer::Position definedAt() = 0;
 	virtual Type getType() = 0;
+
+	virtual QString prettyType() const;
+
+	static ASTElement *fromTokens(Token::List *tl, Token::List::iterator *tli);
 };
+
+QDebug operator<<(QDebug dbg, const ASTElement *t);
 
 #endif // ASTELEMENT_H

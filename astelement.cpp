@@ -24,3 +24,30 @@
 
 #include "astelement.h"
 
+#include "astliteral.h"
+#include "astidentifier.h"
+
+QString ASTElement::prettyType() const
+{
+	return "<ASTE unknown>";
+}
+
+ASTElement *ASTElement::fromTokens(Token::List *tl, Token::List::iterator *tli)
+{
+	ASTElement *r = NULL;
+
+	r = ASTIdentifier::fromTokens(tl, tli);
+	if ( r != NULL ) return r;
+
+	r = ASTLiteral::fromTokens(tl, tli);
+	if ( r != NULL ) return r;
+
+	return NULL;
+}
+
+QDebug operator<<(QDebug dbg, const ASTElement *t)
+{
+	dbg.nospace() << t->prettyType();
+	return dbg.space();
+}
+
