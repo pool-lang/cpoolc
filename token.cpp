@@ -211,7 +211,25 @@ Token::List Token::tokenize(SmartBuffer *b)
 		case '#':
 		case '$':
 		case '%':
+			if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '^':
+			if ( b->peek() == '^' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+			else if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '&':
 			if ( b->peek() == '&' )
 			{
@@ -219,10 +237,34 @@ Token::List Token::tokenize(SmartBuffer *b)
 				t.data = QString(b->read(2));
 				break;
 			}
+			else if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '*':
+			if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '(':
 		case ')':
 		case '-':
+			if ( b->peek() == '-' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+			else if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '=':
 			if ( b->look(2) == "==" )
 			{
@@ -237,7 +279,13 @@ Token::List Token::tokenize(SmartBuffer *b)
 				break;
 			}
 		case '+':
-			if ( b->peek() == '=' )
+			if ( b->peek() == '+' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+			else if ( b->peek() == '=' )
 			{
 				t.type = Operator;
 				t.data = QString(b->read(2));
@@ -261,12 +309,60 @@ Token::List Token::tokenize(SmartBuffer *b)
 		case '}':
 		case ';':
 		case ':':
+			if ( b->peek() == ':' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '|':
+			if ( b->peek() == '|' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+			else if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case ',':
 		case '<':
+			if ( b->peek() == '<' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+			else if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '.':
 		case '>':
+			if ( b->peek() == '>' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+			else if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '/':
+			if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '?':
 			t.type = Operator;
 			t.data = QString(b->pop());
