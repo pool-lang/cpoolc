@@ -51,7 +51,7 @@ Decleration *Decleration::parseDecleartion(SmartBuffer *b)
 		while ( true )
 		{
 			QString id = Symbol::parseIdentifier(b);
-			if ( id == "" ) Error::fatal("Expected identifier.", b);
+			if ( id == "" ) Error::fatal("Expected identifier.", b->position());
 
 			b->consumeWhitespace();
 			if ( b->peek() != ',' )

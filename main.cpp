@@ -95,7 +95,7 @@ int main ( int argc, char **argv )
 			;
 
 	Token::List tl = Token::tokenize(&b);
-	//qDebug() << tl;
+	qDebug() << tl;
 	AST::List ast = AST::parse(tl);
 	qDebug() << ast;
 

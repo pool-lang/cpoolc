@@ -36,6 +36,7 @@ public:
 		Keyword,
 		Literal,
 		Identifier,
+		Comment,
 		Operator,
 	};
 

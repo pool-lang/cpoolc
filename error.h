@@ -33,7 +33,8 @@ namespace Error
 {
 	void reportMessage (QString msg);
 	void reportMessage (QString msg, SmartBuffer::Position buf);
-	void fatal ( QString msg, SmartBuffer *buf = NULL);
+	void fatal ( QString msg );
+	void fatal ( QString msg, SmartBuffer::Position buf );
 }
 
 #endif // ERROR_H

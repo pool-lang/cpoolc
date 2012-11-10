@@ -26,6 +26,7 @@
 
 #include "astliteral.h"
 #include "astidentifier.h"
+#include "astcomment.h"
 
 QString ASTElement::prettyType() const
 {
@@ -40,6 +41,9 @@ ASTElement *ASTElement::fromTokens(Token::List *tl, Token::List::iterator *tli)
 	if ( r != NULL ) return r;
 
 	r = ASTLiteral::fromTokens(tl, tli);
+	if ( r != NULL ) return r;
+
+	r = ASTComment::fromTokens(tl, tli);
 	if ( r != NULL ) return r;
 
 	return NULL;

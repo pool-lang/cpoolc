@@ -1,4 +1,4 @@
-// Copyright 2011-2012 Kevin Cox
+// Copyright 2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,40 +22,42 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef TOKEN_H
-#define TOKEN_H
+#include "astcomment.h"
 
-#include <QString>
-
-#include "smartbuffer.h"
-
-class Token
+ASTComment::ASTComment()
 {
-public:
-	enum Type {
-		Undefined,
-		Character,
-		String,
-		Number,
-		Identifier,
-		Operator,
-		Comment,
-	};
+}
 
-	typedef QList<Token> List;
+ASTComment::ASTComment(QString data, SmartBuffer::Position pos):
+	data(data),
+	defined(pos)
+{
+}
 
-	QString data;
-	SmartBuffer::Position defined;
+SmartBuffer::Position ASTComment::definedAt()
+{
+	return defined;
+}
 
-	Type type;
+ASTElement::Type ASTComment::getType()
+{
+	return Comment;
+}
 
-public:
-	Token();
-	Token(Type type, QString data);
+QString ASTComment::prettyType() const
+{
+	return QString("<ASTE Comment %0%1>")
+			.arg(data.left(10), (data.length()>10)?"...":"");
+}
 
-	static Token::List tokenize(SmartBuffer *b);
-};
+ASTComment *ASTComment::fromTokens(Token::List *tl, Token::List::iterator *tli)
+{
+	if ( (**tli).type == Token::Comment )
+	{
+		ASTComment *r = new ASTComment((**tli).data, (**tli).defined);
+		(*tli)++;
+		return r;
+	}
 
-QDebug operator<<(QDebug dbg, const Token &t);
-
-#endif // TOKEN_H
+	return NULL;
+}
