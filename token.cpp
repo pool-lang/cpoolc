@@ -51,7 +51,7 @@ static QChar parseEscape (SmartBuffer *b)
 
 		bool ok;
 		QChar r = QChar(b->read(4).toInt(&ok, 16));
-		if (!ok) Error::fatal("Could not parse character.", b);
+		if (!ok) Error::fatal("Could not parse character.", b->position());
 		return r;
 	}
 	else
@@ -69,7 +69,7 @@ static QChar parseEscape (SmartBuffer *b)
 		case 't':
 			return '\t';
 		default:
-			Error::fatal("Invalid escape sequence.", b);
+			Error::fatal("Invalid escape sequence.", b->position());
 		}
 	}
 }
@@ -125,7 +125,7 @@ static QString parseNumber(SmartBuffer *b, uint forceBase = 0)
 		break;
 	default:
 		Error::fatal(QString("Bug in code! Bad base.  Look at %0:%1")
-					 .arg(__FILE__).arg(__LINE__), b);
+					 .arg(__FILE__).arg(__LINE__), b->position());
 	}
 
 	uint d = b->tell() - p;
@@ -137,14 +137,14 @@ static QString parseNumber(SmartBuffer *b, uint forceBase = 0)
 	if ( b->pop() == '.' && b->peek().isDigit() )
 	{
 		if ( base != 10 )
-			Error::fatal("Floating points can only be specified in base 10.", b);
+			Error::fatal("Floating points can only be specified in base 10.", b->position());
 
 		r += "." + parseNumber(b, base);
 	}
 	else b->move(-1); // For the pop in the if.
 
 	if (Symbol::isIdentifierStartCharacter(b->peek()))
-		Error::fatal("Unexpected identifier character.", b);
+		Error::fatal("Unexpected identifier character.", b->position());
 
 	return r;
 }
@@ -179,7 +179,7 @@ Token::List Token::tokenize(SmartBuffer *b)
 			{
 				b->move(3);
 				int i = b->look().indexOf("\"\"\"");
-				if ( i < 0 ) Error::fatal("Expected end of raw string.", b);
+				if ( i < 0 ) Error::fatal("Expected end of raw string.", b->position());
 				t.data = b->read(i);
 				b->move(3);
 			}
@@ -190,7 +190,7 @@ Token::List Token::tokenize(SmartBuffer *b)
 				while ( b->peek() != '"' )
 				{
 					if (!b->canRead())
-						Error::fatal("Expected end of string.", b);
+						Error::fatal("Expected end of string.", b->position());
 
 					QChar c = b->pop();
 					if ( c == '\\' ) t.data += parseEscape(b);
@@ -199,6 +199,56 @@ Token::List Token::tokenize(SmartBuffer *b)
 				b->pop(); // Pop the ".
 			}
 			break;
+		case '/':
+			b->pop();
+			if ( b->peek() == '/' )
+			{
+				b->pop();
+				t.type = Comment;
+
+				while ( b->peek() != '\n' )
+					t.data += b->pop();
+
+				break;
+			}
+			else if ( b->peek() == '*' )
+			{
+				b->pop();
+				t.type = Comment;
+
+				while ( b->look(2) != "*/" )
+					t.data += b->pop();
+
+				b->move(2);
+				break;
+			}
+			else if ( b->peek() == '+' )
+			{
+				b->pop();
+				t.type = Comment;
+
+				uint d = 1;
+				while (d)
+				{
+					if (!b->canRead())
+						Error::fatal("Unmatched nesting comments.", b->position());
+
+					if ( b->look(2) == "+/" )
+					{
+						d--;
+						t.data += b->read(2);
+					}
+					else if ( b->look(2) == "/+" )
+					{
+						d++;
+						t.data += b->read(2);
+					}
+					else t.data += b->pop();
+				}
+
+				t.data = t.data.left(t.data.length()-2);
+				break;
+			}
 		case '~':
 		case '!':
 			if ( b->peek() == '=' )
@@ -266,7 +316,6 @@ Token::List Token::tokenize(SmartBuffer *b)
 		case '<':
 		case '.':
 		case '>':
-		case '/':
 		case '?':
 			t.type = Operator;
 			t.data = QString(b->pop());
@@ -314,7 +363,7 @@ Token::List Token::tokenize(SmartBuffer *b)
 			t.data = parseNumber(b);
 			break;
 		default:
-			Error::fatal("Invalid character.", b);
+			Error::fatal("Invalid character.", b->position());
 		}
 
 		l.append(t);
@@ -398,6 +447,9 @@ QDebug operator<<(QDebug dbg, const Token &t)
 		break;
 	case Token::Operator:
 		dbg.nospace() << "<O " << t.data << ">";
+		break;
+	case Token::Comment:
+		dbg.nospace() << "</ " << t.data << ">";
 		break;
 	default:
 		dbg.nospace() << "<? " << t.data << ">";
