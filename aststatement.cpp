@@ -1,4 +1,4 @@
-// Copyright 2012 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,34 +22,29 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef ASTELEMENT_H
-#define ASTELEMENT_H
+#include "aststatement.h"
 
-#include "smartbuffer.h"
-#include "token.h"
-
-class ASTElement
+ASTStatement::ASTStatement()
 {
-public:
-	enum Type {
-		None,
-		Keyword,
-		Literal,
-		Identifier,
-		Comment,
-		Operator,
-		Tuple,
-		Statement,
-	};
+}
+ASTStatement::ASTStatement()
+{
+	setLiteralType(Statement);
+}
 
-	virtual SmartBuffer::Position definedAt() = 0;
-	virtual Type getType() = 0;
 
-	virtual QString prettyType() const;
+ASTStatement::ASTStatement(SmartBuffer::Position pos)
+{
+	setLiteralType(Statement);
+	setPos(pos);
+}
 
-	static ASTElement *fromTokens(Token::List *tl, Token::List::iterator *tli);
-};
+QString ASTStatement::prettyType() const
+{
+	return QString("<ASTE Statment>");
+}
 
-QDebug operator<<(QDebug dbg, const ASTElement *t);
-
-#endif // ASTELEMENT_H
+ASTStatement *ASTStatement::fromTokens(Token::List *tl, QList::iterator *tli)
+{
+	return NULL;
+}
