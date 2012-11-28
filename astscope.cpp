@@ -27,3 +27,33 @@
 ASTScope::ASTScope()
 {
 }
+
+ASTScope::ASTScope(Token::List contents, SmartBuffer::Position pos)
+{
+}
+
+SmartBuffer::Position ASTScope::definedAt()
+{
+	return defined;
+}
+
+QString ASTScope::prettyType() const
+{
+	return "<ASTE Scope>";
+}
+
+ASTElement::Type ASTScope::getType()
+{
+	return Scope;
+}
+
+ASTScope *ASTScope::fromTokens(Token::List *tl, Token::List::iterator *tli)
+{
+	Type t = Unknown;
+	Token::List::iterator i = *tli;
+
+	if ( (*i).type == Token::Operator && (*i).data == "[" )
+	{
+
+	}
+}

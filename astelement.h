@@ -40,6 +40,7 @@ public:
 		Operator,
 		Tuple,
 		Statement,
+		Scope,
 	};
 
 	virtual SmartBuffer::Position definedAt() = 0;

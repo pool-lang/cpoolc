@@ -38,11 +38,19 @@ public:
 		Function,
 	};
 
+private:
 	AST::List elements;
+	SmartBuffer::Position defined;
 
+public:
 	ASTScope();
+	ASTScope(Token::List contents, SmartBuffer::Position pos);
 
+	virtual SmartBuffer::Position definedAt();
+	virtual ASTElement::Type getType();
+	virtual QString prettyType() const;
 
+	static ASTScope *fromTokens(Token::List *tl, Token::List::iterator *tli);
 };
 
 #endif // ASTSCOPE_H

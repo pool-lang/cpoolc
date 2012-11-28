@@ -38,7 +38,7 @@ ASTTuple::ASTTuple(SmartBuffer::Position pos)
 
 QString ASTTuple::prettyType() const
 {
-	return QString("<ASTE Tuple %0").arg(elements.length());
+	return QString("<ASTE Tuple %0>").arg(elements.length());
 }
 
 ASTTuple *ASTTuple::fromTokens(Token::List *tl, QList::iterator *tli)

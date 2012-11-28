@@ -51,7 +51,7 @@ public:
 	uint length();
 
 	QChar pop();
-	QChar peek();
+	QChar peek(uint at = 0);
 
 	QString read();
 	QString read(uint count);
