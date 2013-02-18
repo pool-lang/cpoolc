@@ -28,18 +28,20 @@
 #include "ast.h"
 #include "astelement.h"
 
+#include "ast.h"
+
 class ASTScope: public ASTElement
 {
 public:
 	enum Type {
-		None,
+		Unknown,
 		Block,
 		Function
 	};
 
 private:
 	Type type;
-	SmartBuffer::Position def;
+	SmartBuffer::Position defined;
 	AST::List contents;
 
 public:
@@ -47,11 +49,9 @@ public:
 
 	virtual SmartBuffer::Position definedAt();
 	virtual ASTElement::Type getType();
-
 	virtual QString prettyType() const;
 
 	static ASTScope *fromTokens(Token::List *tl, Token::List::iterator *tli);
-
 };
 
 #endif // ASTSCOPE_H

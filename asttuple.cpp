@@ -1,4 +1,4 @@
-// Copyright 2011-2013 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,46 +22,24 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef BUFFER_H
-#define BUFFER_H
+#include "asttuple.h"
 
-#include <QString>
-
-class Buffer
+ASTTuple::ASTTuple()
 {
-public:
-	static const QChar END;
-	//typedef uint Position;
+}
 
-private:
-	QString data;
-	uint pos;
 
-public:
-	Buffer(QString data);
-	Buffer(const Buffer &buffer);
+ASTTuple::ASTTuple(SmartBuffer::Position pos)
+{
+	defined = pos;
+}
 
-	uint toEnd ();
-	bool canRead(uint count = 1);
+QString ASTTuple::prettyType() const
+{
+	return QString("<ASTE Tuple %0>").arg(elements.length());
+}
 
-	void seek(uint where);
-	void move(int off);
-	uint tell();
-
-	uint length();
-
-	QChar pop();
-	QChar peek(uint at = 0);
-
-	QString read();
-	QString read(uint count);
-
-	QString look();
-	QString look(uint count);
-
-	Buffer copy();
-
-	QString get(uint start, uint stop);
-};
-
-#endif // BUFFER_H
+ASTTuple *ASTTuple::fromTokens(Token::List *tl, Token::List::iterator *tli)
+{
+	return NULL;
+}

@@ -25,7 +25,7 @@
 #include "astscope.h"
 
 ASTScope::ASTScope(AST::List list, Type type, SmartBuffer::Position defined):
-	def(defined),
+	defined(defined),
 	type(type),
 	contents(list)
 {
@@ -33,13 +33,12 @@ ASTScope::ASTScope(AST::List list, Type type, SmartBuffer::Position defined):
 
 SmartBuffer::Position ASTScope::definedAt()
 {
-	return def;
+	return defined;
 }
-
 
 ASTElement::Type ASTScope::getType()
 {
-	return Scope;
+	return ASTElement::Scope;
 }
 
 QString ASTScope::prettyType() const
@@ -51,7 +50,7 @@ ASTScope *ASTScope::fromTokens(Token::List *tl, Token::List::iterator *tli)
 {
 	if ( (**tli).type != Token::Operator ) return NULL;
 
-	Type t = None;
+	Type t = Unknown;
 	Token::List::iterator i = *tli;
 	SmartBuffer::Position pos = i->defined;
 

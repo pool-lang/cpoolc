@@ -38,6 +38,8 @@ public:
 		Identifier,
 		Comment,
 		Operator,
+		Tuple,
+		Statement,
 		Scope,
 	};
 

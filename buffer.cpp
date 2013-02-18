@@ -190,11 +190,11 @@ TEST(Buffer, length)
 }
 #endif
 
-QChar Buffer::peek()
+QChar Buffer::peek(uint at)
 {
-	if (!canRead(1)) return EOF;
+	if (!canRead(at+1)) return EOF;
 
-	return data[pos];
+	return data[pos+at];
 }
 #ifdef TEST
 TEST(Buffer, peek)

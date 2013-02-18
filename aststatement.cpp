@@ -1,4 +1,4 @@
-// Copyright 2011-2013 Kevin Cox
+// Copyright 2011-2012 Kevin Cox
 
 /*******************************************************************************
 *                                                                              *
@@ -22,46 +22,23 @@
 *                                                                              *
 *******************************************************************************/
 
-#ifndef BUFFER_H
-#define BUFFER_H
+#include "aststatement.h"
 
-#include <QString>
-
-class Buffer
+ASTStatement::ASTStatement()
 {
-public:
-	static const QChar END;
-	//typedef uint Position;
+}
 
-private:
-	QString data;
-	uint pos;
+ASTStatement::ASTStatement(SmartBuffer::Position pos)
+{
+	defined = pos;
+}
 
-public:
-	Buffer(QString data);
-	Buffer(const Buffer &buffer);
+QString ASTStatement::prettyType() const
+{
+	return QString("<ASTE Statment>");
+}
 
-	uint toEnd ();
-	bool canRead(uint count = 1);
-
-	void seek(uint where);
-	void move(int off);
-	uint tell();
-
-	uint length();
-
-	QChar pop();
-	QChar peek(uint at = 0);
-
-	QString read();
-	QString read(uint count);
-
-	QString look();
-	QString look(uint count);
-
-	Buffer copy();
-
-	QString get(uint start, uint stop);
-};
-
-#endif // BUFFER_H
+ASTStatement *ASTStatement::fromTokens(Token::List *tl, Token::List::iterator *tli)
+{
+	return NULL;
+}

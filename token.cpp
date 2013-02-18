@@ -203,8 +203,7 @@ Token::List Token::tokenize(SmartBuffer *b)
 			}
 			break;
 		case '/':
-			b->pop();
-			if ( b->peek() == '/' )
+			if ( b->look(2) == "//" )
 			{
 				b->pop();
 				t.type = Comment;
@@ -214,7 +213,7 @@ Token::List Token::tokenize(SmartBuffer *b)
 
 				break;
 			}
-			else if ( b->peek() == '*' )
+			else if ( b->look(2) == "/*" )
 			{
 				b->pop();
 				t.type = Comment;
@@ -225,7 +224,7 @@ Token::List Token::tokenize(SmartBuffer *b)
 				b->move(2);
 				break;
 			}
-			else if ( b->peek() == '+' )
+			else if ( b->look(2) == "/+" )
 			{
 				b->pop();
 				t.type = Comment;
@@ -252,28 +251,107 @@ Token::List Token::tokenize(SmartBuffer *b)
 				t.data = t.data.left(t.data.length()-2);
 				break;
 			}
+			else if ( b->look(2) == "/=" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '~':
 		case '!':
+			if ( ( b->peek() == '~' || b->peek() == '!' )
+			     && b->peek(1) == '='
+			   )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case '&':
+			if ( b->look(2) == "&&" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+			else if ( b->look(2) == "&=" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case '=':
+			if ( b->look(2) == "==" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(3));
+				break;
+			}
+			else if ( b->peek() == '=' )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case '+':
+			if ( b->look(2) == "+=" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case '-':
+			if ( b->look(2) == "-=" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case '*':
+			if ( b->look(2) == "*=" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case '|':
+			if ( b->look(2) == "|=" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case '^':
+			if ( b->look(2) == "^=" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case '[':
+			if ( b->look(2) == "[[" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
+		case ']':
+			if ( b->look(2) == "]]" )
+			{
+				t.type = Operator;
+				t.data = QString(b->read(2));
+				break;
+			}
 		case '@':
 		case '#':
 		case '$':
 		case '%':
-		case '^':
-		case '&':
-		case '*':
 		case '(':
 		case ')':
-		case '-':
-		case '_':
-		case '=':
-		case '+':
-		case '[':
 		case '{':
-		case ']':
 		case '}':
 		case ';':
 		case ':':
-		case '|':
 		case ',':
 		case '<':
 		case '.':
