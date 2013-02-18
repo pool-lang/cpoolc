@@ -38,6 +38,7 @@ public:
 		Identifier,
 		Comment,
 		Operator,
+		Scope,
 	};
 
 	virtual SmartBuffer::Position definedAt() = 0;

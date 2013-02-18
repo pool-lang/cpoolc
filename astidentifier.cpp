@@ -104,7 +104,7 @@ ASTIdentifier *ASTIdentifier::fromTokens(Token::List *tl,
 				break;
 			}
 
-			if ( (*i).type != Token::Identifier ) Error::fatal("Trailing ::.");
+			if ( (*i).type != Token::Identifier ) Error::fatal("Trailing '::'.");
 			r.data += (*i).data;
 
 			i++;

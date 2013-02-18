@@ -38,7 +38,7 @@ public:
 
 	AST();
 
-	static List parse(Token::List tl);
+	static List parse(Token::List tl, Token::List::iterator *tli = NULL);
 };
 
 #endif // AST_H

@@ -24,6 +24,74 @@
 
 #include "astscope.h"
 
-ASTScope::ASTScope()
+ASTScope::ASTScope(AST::List list, Type type, SmartBuffer::Position defined):
+	def(defined),
+	type(type),
+	contents(list)
 {
+}
+
+SmartBuffer::Position ASTScope::definedAt()
+{
+	return def;
+}
+
+
+ASTElement::Type ASTScope::getType()
+{
+	return Scope;
+}
+
+QString ASTScope::prettyType() const
+{
+	return QString("<ASTE Identifier>");
+}
+
+ASTScope *ASTScope::fromTokens(Token::List *tl, Token::List::iterator *tli)
+{
+	if ( (**tli).type != Token::Operator ) return NULL;
+
+	Type t = None;
+	Token::List::iterator i = *tli;
+	SmartBuffer::Position pos = i->defined;
+
+	if ( i->data == "{" )
+	{
+		t = Block;
+		i++;
+	}
+	else if ( i->data == "[" )
+	{
+		tli++;
+		if ( i->type == Token::Operator && i->data == "[" )
+		{
+			t = Function;
+			i++;
+		}
+		else return NULL;
+	}
+
+	AST::List ast = AST::parse(*tl, &i);
+
+	switch (t)
+	{
+		Block:
+		if ( i->type == Token::Operator && i->data == "}" )
+		{
+			*tli = i;
+			return new ASTScope(ast, Block, pos);
+		}
+		Function:
+		if ( i->type == Token::Operator && i->data == "[" )
+		{
+			i++;
+			if ( i->type == Token::Operator && i->data == "[" )
+			{
+				*tli = i;
+				return new ASTScope(ast, Block, pos);
+			}
+		}
+	}
+
+	return NULL;
 }

@@ -28,9 +28,11 @@ AST::AST()
 {
 }
 
-AST::List AST::parse(Token::List tl)
+AST::List AST::parse(Token::List tl, Token::List::iterator *tli)
 {
-	Token::List::iterator i = tl.begin();
+	Token::List::iterator i;
+	if (tli) i = *tli;
+	else     i =  tl.begin();
 
 	List eles; // Start anew.
 
