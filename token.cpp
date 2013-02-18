@@ -91,6 +91,9 @@ static QString parseNumber(SmartBuffer *b, uint forceBase = 0)
 			case 'o':
 				base = 8;
 				break;
+			case 'd':
+				base = 10;
+				break;
 			case 'x':
 				base = 16;
 				break;
